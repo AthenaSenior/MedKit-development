@@ -21,41 +21,59 @@ class SplashScreen extends StatefulWidget {
 
   final String title;
 
+
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  int _counter = 0;
+  /* int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
   }
+  */
+
+  double turns = 0.0;
+
+  void _changeRotation() {
+    setState(() => turns += 1.0 / 8.0);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _changeRotation();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: Container(
+        constraints: BoxConstraints.expand(),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.jpg"),
+              fit: BoxFit.cover,
+            )
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Med-Kit App',
+            AnimatedRotation(
+              turns: turns,
+              duration: const Duration(seconds: 15),
+              child: Image.asset('assets/images/medkit_logo.jpg', width: 350, height: 300),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            // Image.asset('assets/images/medkit_logo.jpg', width: 350, height: 300),
+            // Buraya daha çok widget ekleyebilirsiniz virgüllerle
+            // @@ Author Egemen
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
