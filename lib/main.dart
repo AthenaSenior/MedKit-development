@@ -3,8 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -75,14 +79,14 @@ SingleTickerProviderStateMixin{
 
   late String splashScreenSentence;
   List<String> splashScreenSentences =
-  ["Sentence1",
-    "Sentence2",
-    "Sentence3 ",
-    "Sentence8",
-    "Sentence4",
-    "Sentence5",
-    "Sentence6",
-    "Sentence7"];
+  ["Interesting fact : \nI am better than google search ;)",
+    "Waiting you for scan..",
+    "Are you ill again ? :/",
+    "Bring me some medicine!",
+    "+Knock Knock! \n-Who is there? \n+ Your friendly Pharmacist Med-Kit!",
+    "No pharmacist near to you ? I have an idea!",
+    "Hey siri! Thank you for opening me!",
+    "I am ready to inform you about the medicines!"];
 
   @override
   void initState() {
@@ -137,8 +141,13 @@ SingleTickerProviderStateMixin{
                   height: 30)
             ),
             const SizedBox(height: 20),
+        Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
             Text(splashScreenSentence, style: const TextStyle(fontSize: 18)
             ),
+        ]
+        ),
             // Buraya daha çok widget ekleyebilirsiniz virgüllerle
             // @@ Author Egemen
           ],
@@ -156,117 +165,456 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  bool checkedValue = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  AuthService _authService = AuthService();
-
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        constraints: const BoxConstraints.expand(),
-        decoration: const BoxDecoration(
+        body:
+          Container(
+                constraints: const BoxConstraints.expand(),
+            decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/background.jpg"),
-              fit: BoxFit.cover,
+            image: AssetImage("assets/images/background2.jpg"),
+            fit: BoxFit.cover,
             )
-        ),
+            ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text("Login to Med-Kit", style: TextStyle(fontSize: 35, fontFamily: 'RobotoCondensed')),
-            const SizedBox(height: 20),
-            Image.asset('assets/images/medkit_logo.png',
-                width: 200,
-                height: 150),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                    Text("Username:", style: TextStyle(fontSize: 25, fontFamily: 'RobotoCondensed')
-                    ),
-                    SizedBox(width: 20),
-                    SizedBox(
-                      width:150,
-                      height:50,
-                      child: TextField(
-                        decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 2, color: Colors.white38),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+        Image.asset('assets/images/medkit_logo.png',
+            width: 150,
+            height: 100),
+              const SizedBox(
+                height: 20,
+              ),
+            Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Container(
+              height: size.height * .5,
+              width: size.width * .85,
+              decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(.75),
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(.75),
+                        blurRadius: 10,
+                        spreadRadius: 2)
+                  ]),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextField(
+                          controller: _emailController,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          cursorColor: Colors.white,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.mail,
+                              color: Colors.white,
                             ),
+                            hintText: 'E-Mail',
+                            prefixText: ' ',
+                            hintStyle: TextStyle(color: Colors.white),
+                            focusColor: Colors.white,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                )),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                )),
+                          )),
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      TextField(
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          cursorColor: Colors.white,
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.vpn_key,
+                              color: Colors.white,
+                            ),
+                            hintText: 'Password',
+                            prefixText: ' ',
+                            hintStyle: TextStyle(
+                              color: Colors.white,
+                            ),
+                            focusColor: Colors.white,
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                )),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                )),
+                          )),
+                      SizedBox(
+                        height: size.height * 0.08,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _authService
+                              .logInToSystem(
+                              _emailController.text, _passwordController.text)
+                              .then((value) {
+                            return Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 2),
+                              //color: colorPrimaryShade,
+                              borderRadius: const BorderRadius.all(Radius.circular(30))),
+                          child: const Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Center(
+                                child: Text(
+                                  "Login to Med-Kit",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                )),
+                          ),
                         ),
                       ),
-                    )
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterPage()));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              children: <Widget>[
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                const Text(
+                                  "No account yet?",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      height: 1,
+                                      width: 75,
+                                      color: Colors.white,
+                                    ),
+                                    const Text(
+                                      "Register",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    Container(
+                                      height: 1,
+                                      width: 75,
+                                      color: Colors.white,
+                                    ),
+                                  ]
+                                )
+                              ]
+                            ),
+                          ],
+                        ),
+                      )
                     ],
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text("Password:", style: TextStyle(fontSize: 25, fontFamily: 'RobotoCondensed')
-            ),
-            SizedBox(width: 23),
-            SizedBox(
-              width:150,
-              height:50,
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 2, color: Colors.white38),
-                    ),
+          ),
+    ),
+            ]
+        ),
+        ),
+    );
+  }
+}
 
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+    );
+  }
+}
+
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordAgainController =
+  TextEditingController();
+
+  AuthService _authService = AuthService();
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return Scaffold(
+        body: Stack(
+          children: [
+        Container(
+              constraints: const BoxConstraints.expand(),
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/background2.jpg"),
+                  fit: BoxFit.cover,
+                )
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Container(
+                  height: size.height * .7,
+                  width: size.width * .85,
+                  decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(.75),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(.75),
+                            blurRadius: 10,
+                            spreadRadius: 2)
+                      ]),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextField(
+                              controller: _nameController,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              cursorColor: Colors.white,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                ),
+                                hintText: 'Username',
+                                prefixText: ' ',
+                                hintStyle: TextStyle(color: Colors.white),
+                                focusColor: Colors.white,
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                              )),
+                          SizedBox(
+                            height: size.height * 0.02,
+                          ),
+                          TextField(
+                              controller: _emailController,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              cursorColor: Colors.white,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.mail,
+                                  color: Colors.white,
+                                ),
+                                hintText: 'E-Mail',
+                                prefixText: ' ',
+                                hintStyle: TextStyle(color: Colors.white),
+                                focusColor: Colors.white,
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                              )),
+                          SizedBox(
+                            height: size.height * 0.02,
+                          ),
+                          TextField(
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              cursorColor: Colors.white,
+                              controller: _passwordController,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.vpn_key,
+                                  color: Colors.white,
+                                ),
+                                hintText: 'Password',
+                                prefixText: ' ',
+                                hintStyle: TextStyle(color: Colors.white),
+                                focusColor: Colors.white,
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                              )),
+                          SizedBox(
+                            height: size.height * 0.02,
+                          ),
+                          TextField(
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              cursorColor: Colors.white,
+                              controller: _passwordAgainController,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.vpn_key,
+                                  color: Colors.white,
+                                ),
+                                hintText: 'Password Repeat',
+                                prefixText: ' ',
+                                hintStyle: TextStyle(color: Colors.white),
+                                focusColor: Colors.white,
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.white,
+                                    )),
+                              )),
+                          SizedBox(
+                            height: size.height * 0.08,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              _authService
+                                  .registerToSystem(
+                                  _nameController.text,
+                                  _emailController.text,
+                                  _passwordController.text)
+                                  .then((value) {
+                                return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const LoginPage()));
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white, width: 2),
+                                  //color: colorPrimaryShade,
+                                  borderRadius:
+                                  const BorderRadius.all(Radius.circular(30))),
+                              child: const Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Center(
+                                    child: Text(
+                                      "Register",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ),
+            Padding(
+              padding:
+              EdgeInsets.only(top: size.height * .06, left: size.width * .02),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.arrow_back_ios_outlined,
+                        color: Colors.green.withOpacity(.75),
+                        size: 26,
+                      ),
+                    ),
+                    SizedBox(
+                      width: size.width * 0.3,
+                    ),
+                    Text(
+                      "Register",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.green.withOpacity(.75),
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
               ),
             )
           ],
-        ),
-            const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.only(top:0, left:50, right:0),
-            alignment: Alignment.center,
-            child:
-              CheckboxListTile(
-                title: const Text("Remember my information", style: TextStyle(fontSize: 18, fontFamily: 'RobotoCondensed')),
-                value: checkedValue,
-                onChanged: (newValue) {
-                  setState(() {
-                    checkedValue = newValue!;
-                    if (checkedValue) {
-                      // TODO: Here goes your functionality that remembers the user.
-                    } else {
-                      // TODO: Forget the user
-                    }
-                  });
-                },
-                controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              child: const Text("Login", style: TextStyle(color: Colors.white),),
-              onPressed: (){
-
-              },
-            ),
-            const SizedBox(height: 20),
-            const Text("No account yet?", style: TextStyle(fontSize: 21, fontFamily: 'RobotoCondensed')
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              child: const Text("Register Now", style: TextStyle(color: Colors.white),),
-              onPressed: (){
-                // TODO: Register Page.
-              },
-            ),
-            // Daha çok widget ekleyebilirsiniz burdan @@ Author Egemen
-          ],
-
-        ),
-      ),
-    );
+        ));
   }
 }

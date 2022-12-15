@@ -20,10 +20,10 @@ dev_dependencies:
     sdk: flutter
 
   fluttertoast: ^8.0.8
-  firebase_auth: ^3.0.1
-  firebase_core: ^1.4.0
-  cloud_firestore: ^2.4.0
-  firebase_storage: ^10.0.1
+  firebase_auth: ^4.2.1
+  firebase_core: ^2.4.0
+  cloud_firestore: ^4.2.0
+  firebase_storage: ^11.0.8
   image_picker: ^0.8.3+2
 
   flutter_lints: ^2.0.0
