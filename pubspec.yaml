@@ -25,5 +25,10 @@ flutter:
   assets:
   - assets/images/ #Multiple Images will be included. @@ Author Egemen
 
+  fonts:
+    - family: RobotoCondensed
+      fonts:
+       - asset: assets/fonts/RobotoCondensed-Regular.ttf
+
 
   uses-material-design: true

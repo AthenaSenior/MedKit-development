@@ -171,6 +171,8 @@ class LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            const Text("Login to Med-Kit", style: TextStyle(fontSize: 35, fontFamily: 'RobotoCondensed')),
+            const SizedBox(height: 20),
             Image.asset('assets/images/medkit_logo.png',
                 width: 200,
                 height: 150),
@@ -178,7 +180,7 @@ class LoginPageState extends State<LoginPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
                 children: const <Widget>[
-                    Text("Username:", style: TextStyle(fontSize: 25)
+                    Text("Username:", style: TextStyle(fontSize: 25, fontFamily: 'RobotoCondensed')
                     ),
                     SizedBox(width: 20),
                     SizedBox(
@@ -199,7 +201,7 @@ class LoginPageState extends State<LoginPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
-            Text("Password:", style: TextStyle(fontSize: 25)
+            Text("Password:", style: TextStyle(fontSize: 25, fontFamily: 'RobotoCondensed')
             ),
             SizedBox(width: 23),
             SizedBox(
@@ -224,7 +226,7 @@ class LoginPageState extends State<LoginPage> {
             alignment: Alignment.center,
             child:
               CheckboxListTile(
-                title: const Text("Remember my information", style: TextStyle(fontSize: 17)),
+                title: const Text("Remember my information", style: TextStyle(fontSize: 18, fontFamily: 'RobotoCondensed')),
                 value: checkedValue,
                 onChanged: (newValue) {
                   setState(() {
@@ -247,7 +249,7 @@ class LoginPageState extends State<LoginPage> {
               },
             ),
             const SizedBox(height: 20),
-            const Text("No account yet?", style: TextStyle(fontSize: 18)
+            const Text("No account yet?", style: TextStyle(fontSize: 21, fontFamily: 'RobotoCondensed')
             ),
             const SizedBox(height: 20),
             ElevatedButton(
