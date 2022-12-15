@@ -443,7 +443,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   Icons.person,
                                   color: Colors.white,
                                 ),
-                                hintText: 'Username',
+                                hintText: 'Your Full Name',
                                 prefixText: ' ',
                                 hintStyle: TextStyle(color: Colors.white),
                                 focusColor: Colors.white,
