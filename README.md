@@ -1,3 +1,3 @@
 # MedKit-development
 
-This repository includes source files of Med-Kit.
+The code of Med-Kit is on master branch.
