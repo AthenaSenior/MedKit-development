@@ -71,7 +71,9 @@ SingleTickerProviderStateMixin{
       },
     );
   }
-  List<String> initialScreenSentences =
+
+  late String splashScreenSentence;
+  List<String> splashScreenSentences =
   ["Sentence1",
     "Sentence2",
     "Sentence3 ",
@@ -91,6 +93,8 @@ SingleTickerProviderStateMixin{
     setRotation(360);
     animationController.forward(from:0);
     startTimer();
+    var intValue = Random().nextInt(7); // Value is >= 0 and < 10.
+    splashScreenSentence = splashScreenSentences[intValue];
   }
 
   @override
@@ -124,13 +128,16 @@ SingleTickerProviderStateMixin{
                   height: 200),
 
             ),
+            const SizedBox(height: 20),
             Visibility(
               visible: loading,
               child: Image.asset('assets/images/loading-gif.gif',
                   width: 30,
                   height: 30)
             ),
-            // Image.asset('assets/images/medkit_logo.jpg', width: 350, height: 300),
+            const SizedBox(height: 20),
+            Text(splashScreenSentence, style: const TextStyle(fontSize: 18)
+            ),
             // Buraya daha çok widget ekleyebilirsiniz virgüllerle
             // @@ Author Egemen
           ],
@@ -220,7 +227,7 @@ class LoginPageState extends State<LoginPage> {
                 title: const Text("Remember my information", style: TextStyle(fontSize: 17)),
                 value: checkedValue,
                 onChanged: (newValue) {
-                  setState(() { //// KULLANICIYI HATIRLAMA İŞLEMİ @@ Author Egemen
+                  setState(() {
                     checkedValue = newValue!;
                     if (checkedValue) {
                       // TODO: Here goes your functionality that remembers the user.
@@ -240,7 +247,7 @@ class LoginPageState extends State<LoginPage> {
               },
             ),
             const SizedBox(height: 20),
-            const Text("Have no account yet?", style: TextStyle(fontSize: 18)
+            const Text("No account yet?", style: TextStyle(fontSize: 18)
             ),
             const SizedBox(height: 20),
             ElevatedButton(
