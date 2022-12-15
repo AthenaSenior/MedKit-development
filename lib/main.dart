@@ -24,8 +24,6 @@ class SplashScreen extends StatefulWidget {
 
   final String title;
 
-
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -54,8 +52,11 @@ SingleTickerProviderStateMixin{
           (Timer timer) {
         if (_start == 0) {
           setState(() {
-            // Buradan yeni sayfaya yönlendireceğiz. Author Egemen
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()));// Buradan yeni sayfaya yönlendireceğiz. Author Egemen
           });
+          timer.cancel();
         }
         else if (_start == 6) {
           setState(() {
@@ -96,7 +97,7 @@ SingleTickerProviderStateMixin{
         constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/background.jpg"),
+              image: AssetImage("assets/images/background2.jpg"),
               fit: BoxFit.cover,
             )
         ),
@@ -124,6 +125,107 @@ SingleTickerProviderStateMixin{
             // Buraya daha çok widget ekleyebilirsiniz virgüllerle
             // @@ Author Egemen
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => LoginPageState();
+}
+
+class LoginPageState extends State<LoginPage> {
+  bool checkedValue = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        constraints: const BoxConstraints.expand(),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.jpg"),
+              fit: BoxFit.cover,
+            )
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset('assets/images/medkit_logo.png',
+                width: 200,
+                height: 150),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+                children: const <Widget>[
+                    Text("Username:", style: TextStyle(fontSize: 25)
+                    ),
+                    SizedBox(width: 20),
+                    SizedBox(
+                      width:150,
+                      height:50,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 2, color: Colors.white38),
+                            ),
+                        ),
+                      ),
+                    )
+                    ],
+            ),
+            const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const <Widget>[
+            Text("Password:", style: TextStyle(fontSize: 25)
+            ),
+            SizedBox(width: 23),
+            SizedBox(
+              width:150,
+              height:50,
+              child: TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 2, color: Colors.white38),
+                    ),
+
+                ),
+              ),
+            )
+          ],
+        ),
+            const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.only(top:0, left:70, right:0),
+            alignment: Alignment.center,
+            child:
+              CheckboxListTile(
+                title: const Text("Remember me", style: TextStyle(fontSize: 17)),
+                value: checkedValue,
+                onChanged: (newValue) {
+                  setState(() { //// KULLANICIYI HATIRLAMA İŞLEMİ @@ Author Egemen
+                    checkedValue = newValue!;
+                    if (checkedValue) {
+                      // TODO: Here goes your functionality that remembers the user.
+                    } else {
+                      // TODO: Forget the user
+                    }
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+              ),
+            ),
+            // Daha çok widget ekleyebilirsiniz burdan @@ Author Egemen
+          ],
+
         ),
       ),
     );
