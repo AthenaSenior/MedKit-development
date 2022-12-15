@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:med_kit/service/auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -157,6 +158,9 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   bool checkedValue = false;
 
+  AuthService _authService = AuthService();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -245,7 +249,7 @@ class LoginPageState extends State<LoginPage> {
             ElevatedButton(
               child: const Text("Login", style: TextStyle(color: Colors.white),),
               onPressed: (){
-                // TODO: Login Function.
+
               },
             ),
             const SizedBox(height: 20),
