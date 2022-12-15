@@ -71,6 +71,15 @@ SingleTickerProviderStateMixin{
       },
     );
   }
+  List<String> initialScreenSentences =
+  ["Med-Kit is with you with its expanding medicine list.",
+    "Scan your drug today and see its content fastly.",
+    "Do you know ",
+    "Japan",
+    "China",
+    "UK",
+    "Uganda",
+    "Uruguay"];
 
   @override
   void initState() {
@@ -222,6 +231,13 @@ class LoginPageState extends State<LoginPage> {
                 },
                 controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
               ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              child: const Text("Login", style: TextStyle(color: Colors.white),),
+              onPressed: (){
+                // TODO: Login Function.
+              },
             ),
             // Daha çok widget ekleyebilirsiniz burdan @@ Author Egemen
           ],
