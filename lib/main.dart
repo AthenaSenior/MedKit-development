@@ -72,14 +72,14 @@ SingleTickerProviderStateMixin{
     );
   }
   List<String> initialScreenSentences =
-  ["Med-Kit is with you with its expanding medicine list.",
-    "Scan your drug today and see its content fastly.",
-    "Do you know ",
-    "Japan",
-    "China",
-    "UK",
-    "Uganda",
-    "Uruguay"];
+  ["Sentence1",
+    "Sentence2",
+    "Sentence3 ",
+    "Sentence8",
+    "Sentence4",
+    "Sentence5",
+    "Sentence6",
+    "Sentence7"];
 
   @override
   void initState() {
@@ -213,11 +213,11 @@ class LoginPageState extends State<LoginPage> {
         ),
             const SizedBox(height: 20),
           Container(
-            padding: const EdgeInsets.only(top:0, left:70, right:0),
+            padding: const EdgeInsets.only(top:0, left:50, right:0),
             alignment: Alignment.center,
             child:
               CheckboxListTile(
-                title: const Text("Remember me", style: TextStyle(fontSize: 17)),
+                title: const Text("Remember my information", style: TextStyle(fontSize: 17)),
                 value: checkedValue,
                 onChanged: (newValue) {
                   setState(() { //// KULLANICIYI HATIRLAMA İŞLEMİ @@ Author Egemen
@@ -237,6 +237,16 @@ class LoginPageState extends State<LoginPage> {
               child: const Text("Login", style: TextStyle(color: Colors.white),),
               onPressed: (){
                 // TODO: Login Function.
+              },
+            ),
+            const SizedBox(height: 20),
+            const Text("Have no account yet?", style: TextStyle(fontSize: 18)
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              child: const Text("Register Now", style: TextStyle(color: Colors.white),),
+              onPressed: (){
+                // TODO: Register Page.
               },
             ),
             // Daha çok widget ekleyebilirsiniz burdan @@ Author Egemen
