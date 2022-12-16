@@ -276,7 +276,7 @@ class LoginPageState extends State<LoginPage> {
                         child:
                         const Text(
                             "Username or password is invalid.",
-                            style: TextStyle(color: Colors.red,
+                            style: TextStyle(color: Colors.red, fontSize: 18, fontWeight: FontWeight.bold
                             )),
                       ),
 
