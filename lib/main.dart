@@ -47,12 +47,12 @@ SingleTickerProviderStateMixin{
   }
 
 
-  late Timer _timer;
   int _start = 10;
+  late Timer splashTimer;
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
+    splashTimer = Timer.periodic(
       oneSec,
           (Timer timer) {
         if (_start == 0) {
@@ -167,7 +167,7 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  static bool informationInvalid = false;
   final AuthService _authService = AuthService();
 
   @override
@@ -269,7 +269,19 @@ class LoginPageState extends State<LoginPage> {
                                 )),
                           )),
                       SizedBox(
-                        height: size.height * 0.08,
+                        height: size.height * 0.02,
+                      ),
+                      Visibility(
+                        visible: informationInvalid,
+                        child:
+                        const Text(
+                            "Username or password is invalid.",
+                            style: TextStyle(color: Colors.red,
+                            )),
+                      ),
+
+                      SizedBox(
+                        height: size.height * 0.04,
                       ),
                       InkWell(
                         onTap: () {
@@ -310,7 +322,7 @@ class LoginPageState extends State<LoginPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RegisterPage()));
+                                  builder: (context) => const RegisterPage()));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -372,9 +384,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  static String loggedInUserFullName = "";
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      body:  Center(
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:
+             [
+
+              const Text(
+                "Welcome",
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                loggedInUserFullName,
+                style: const TextStyle(
+                  color: Colors.black38,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+      ),
+      ),
     );
   }
 }

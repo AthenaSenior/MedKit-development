@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:med_kit/main.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -7,8 +8,16 @@ class AuthService {
 
   // Login Function
   Future<User?> logInToSystem(String email, String password) async {
-    var user = await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
+    var user;
+    try{
+      user = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+    }
+    on FirebaseAuthException catch (e) {
+      print(e);
+      LoginPageState.informationInvalid = true;
+      return user.user;
+    }
     return user.user;
   }
 
@@ -23,7 +32,7 @@ class AuthService {
         email: email, password: password);
 
     await _firestore
-        .collection("Person")
+        .collection("Med-Kit User")
         .doc(user.user!.uid)
         .set({'userName': name, 'email': email});
 
