@@ -35,7 +35,7 @@ class AuthService {
     if(name.isEmpty || email.isEmpty || password.isEmpty)
     {
       RegisterPageState.registerInformationInvalid = true;
-      RegisterPageState.errorMessage = "Input your information.";
+      RegisterPageState.errorMessage = "Please input your information.";
       var user =
       await _auth.createUserWithEmailAndPassword(email: "", password: "");
       return user.user;
