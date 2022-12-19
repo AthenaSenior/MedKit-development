@@ -167,6 +167,7 @@ class LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
@@ -272,15 +273,19 @@ class LoginPageState extends State<LoginPage> {
                         ),
                         InkWell(
                           onTap: () {
-                            _authService
-                                .logInToSystem(_emailController.text,
+                              setState(() {
+                                _authService
+                                    .logInToSystem(_emailController.text,
                                     _passwordController.text)
-                                .then((value) {
-                              return Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomePage()));
-                            });
+                                    .then((value) {
+                                  LoginPageState.informationInvalid = false;
+                                  RegisterPageState.registerInformationInvalid = false;
+                                  return Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const HomePage()));
+                                });
+                              });
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 5),
@@ -308,6 +313,11 @@ class LoginPageState extends State<LoginPage> {
                         ),
                         InkWell(
                           onTap: () {
+                            setState(() {
+
+                            });
+                            LoginPageState.informationInvalid = false;
+                            RegisterPageState.registerInformationInvalid = false;
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -413,14 +423,15 @@ class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordAgainController =
       TextEditingController();
   static bool registerInformationInvalid = false;
-  bool _listTileCheckBox = false;
   static String errorMessage = "";
+  bool _listTileCheckBox = false;
   AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
       children: [
         Container(
@@ -560,11 +571,16 @@ class RegisterPageState extends State<RegisterPage> {
                                 color: Colors.white,
                               )),
                             )),
+                        SizedBox(
+                          height: size.height * 0.04,
+                        ),
                         CheckboxListTile(
                           value: _listTileCheckBox,
                           // ignore: prefer_const_constructors
                           title: Text(
-                            "I understand and agree that this application is only for suggestion and does not claiming any professional medical support",
+                            "I understand and agree that this application is only "
+                                "for suggestion and does not claiming any "
+                                "professional medical support.",
                             style: const TextStyle(color: Colors.white),
                           ),
                           onChanged: (val) {
@@ -584,7 +600,7 @@ class RegisterPageState extends State<RegisterPage> {
                           child: Text(errorMessage,
                               style: const TextStyle(
                                   color: Colors.red,
-                                  fontSize: 18,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold)),
                         ),
                         SizedBox(
@@ -592,17 +608,22 @@ class RegisterPageState extends State<RegisterPage> {
                         ),
                         InkWell(
                           onTap: () {
+                            setState(() {
                             _authService
                                 .registerToSystem(
                                     _nameController.text,
                                     _emailController.text,
                                     _passwordController.text,
+                                    _passwordAgainController.text,
                                     _listTileCheckBox)
                                 .then((value) {
+                              LoginPageState.informationInvalid = false;
+                              RegisterPageState.registerInformationInvalid = false;
                               return Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => const LoginPage()));
+                            });
                             });
                           },
                           child: Container(
