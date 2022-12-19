@@ -31,7 +31,7 @@ class AuthService {
       String name, String email, String password,
       String passwordRepeat, bool checked) async {
 
-    // Consent text checked or not: Check other fields first
+    // Consent text checked or not: Check other fields first.
     if(name.isEmpty || email.isEmpty || password.isEmpty)
     {
       RegisterPageState.registerInformationInvalid = true;
