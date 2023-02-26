@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:med_kit/main.dart';
+import 'package:med_kit/LoginPage.dart';
+import 'package:med_kit/RegisterPage.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
