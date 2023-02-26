@@ -18,7 +18,7 @@ class HomePageState extends State<HomePage> {
     var dt = DateTime.now().hour;
 
     /* QUERYING USER --- T.B.C.
- // Commented for now
+ // Commented for now.
      name = "";
 
     FirebaseFirestore.instance
