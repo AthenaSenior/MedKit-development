@@ -41,7 +41,7 @@ class RegisterPageState extends State<RegisterPage> {
                     height: size.height * .7,
                     width: size.width * .85,
                     decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(.75),
+                        color: Colors.blueGrey.withOpacity(.35),
                         borderRadius: const BorderRadius.all(Radius.circular(20)),
                         boxShadow: [
                           BoxShadow(
@@ -174,7 +174,7 @@ class RegisterPageState extends State<RegisterPage> {
                                 "I understand and agree that this application is only "
                                     "for suggestion and does not claiming any "
                                     "professional medical support.",
-                                style: const TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white, fontSize: 10),
                               ),
                               onChanged: (val) {
                                 setState(() {
@@ -193,7 +193,7 @@ class RegisterPageState extends State<RegisterPage> {
                               child: Text(errorMessage,
                                   style: const TextStyle(
                                       color: Colors.red,
-                                      fontSize: 20,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(
@@ -259,18 +259,18 @@ class RegisterPageState extends State<RegisterPage> {
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(
                         Icons.arrow_back_ios_outlined,
-                        color: Colors.green.withOpacity(.75),
+                        color: Colors.blueGrey.withOpacity(.35),
                         size: 26,
                       ),
                     ),
                     SizedBox(
-                      width: size.width * 0.3,
+                      width: size.width * 0.23,
                     ),
                     Text(
                       "Register",
                       style: TextStyle(
                           fontSize: 20,
-                          color: Colors.green.withOpacity(.75),
+                          color: Colors.blueAccent.withOpacity(.75),
                           fontWeight: FontWeight.bold),
                     )
                   ],

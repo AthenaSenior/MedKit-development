@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
-
 import 'Home.dart';
 import 'RegisterPage.dart';
-import 'SplashScreen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,7 +19,9 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async => false,
+    child: Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
         constraints: const BoxConstraints.expand(),
@@ -34,6 +34,16 @@ class LoginPageState extends State<LoginPage> {
             Widget>[
           Image.asset('assets/images/medkit_logo.png', width: 150, height: 100),
           const SizedBox(
+            height: 10,
+          ),
+          const Text(
+            "Welcome back!",
+            style: TextStyle(
+              color: Colors.green,
+              fontSize: 18,
+              fontWeight: FontWeight.bold)
+          ),
+          const SizedBox(
             height: 20,
           ),
           Center(
@@ -43,7 +53,7 @@ class LoginPageState extends State<LoginPage> {
                 height: size.height * .5,
                 width: size.width * .85,
                 decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(.75),
+                    color: Colors.blueGrey.withOpacity(.35),
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                     boxShadow: [
                       BoxShadow(
@@ -120,7 +130,7 @@ class LoginPageState extends State<LoginPage> {
                           child: const Text("Username or password is invalid.",
                               style: TextStyle(
                                   color: Colors.red,
-                                  fontSize: 18,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold)),
                         ),
                         SizedBox(
@@ -135,6 +145,7 @@ class LoginPageState extends State<LoginPage> {
                                   .then((value) {
                                 LoginPageState.informationInvalid = false;
                                 RegisterPageState.registerInformationInvalid = false;
+                                HomePageState.loggedInUserEmail = _emailController.text;
                                 return Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -222,6 +233,7 @@ class LoginPageState extends State<LoginPage> {
           ),
         ]),
       ),
+    ),
     );
   }
 }
