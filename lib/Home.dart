@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,18 +10,6 @@ class HomePageState extends State<HomePage> {
   static String loggedInUserEmail = "";
 
   late String backgroundImage, title, name;
-
-  int _selectedIndex = 0;
-
-  static const List<Widget> _widgetOptions = <Widget>[
-    // Sayfa yönlendirmeleri gelecek.
-  ];
-
-  void _onItemTapped(int i) {
-    setState(() {
-      _selectedIndex = i;
-    });
-  }
 
   @override
   void initState() {
@@ -123,33 +110,6 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ]),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.grey),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Colors.grey),
-              label: 'Profile',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code_scanner, color: Colors.grey),
-              label: 'Scan Drugs',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.question_answer, color: Colors.grey),
-              label: 'FAQ',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.logout, color: Colors.grey),
-              label: 'Log Out',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blueAccent,
-          onTap: _onItemTapped,
         ),
       ),
     );
