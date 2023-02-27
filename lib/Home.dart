@@ -12,6 +12,18 @@ class HomePageState extends State<HomePage> {
 
   late String backgroundImage, title, name;
 
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    // Sayfa yönlendirmeleri gelecek.
+  ];
+
+  void _onItemTapped(int i) {
+    setState(() {
+      _selectedIndex = i;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +41,7 @@ class HomePageState extends State<HomePage> {
       onError: (e) => print("Error completing: $e"),
     ); */
 
+    name = "";
     if(dt >= 6 && dt < 12)
     {
       backgroundImage = "assets/images/morning.jpg";
@@ -90,7 +103,7 @@ class HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .85,
+                  height: size.height * .75,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                       color: Colors.white70.withOpacity(.75),
@@ -110,6 +123,33 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ]),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.grey),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: Colors.grey),
+              label: 'Profile',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.qr_code_scanner, color: Colors.grey),
+              label: 'Scan Drugs',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.question_answer, color: Colors.grey),
+              label: 'FAQ',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.logout, color: Colors.grey),
+              label: 'Log Out',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blueAccent,
+          onTap: _onItemTapped,
         ),
       ),
     );

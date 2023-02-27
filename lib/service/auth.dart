@@ -63,6 +63,7 @@ class AuthService {
             .collection("Med-Kit User")
             .doc(user.user!.uid)
             .set({'userName': name, 'email': email});
+
       } on FirebaseAuthException catch (e) {
         // Catch another issues
         switch (e.message)
