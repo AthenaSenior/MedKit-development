@@ -96,12 +96,13 @@ class HomePageState extends State<HomePage> {
                       color: Colors.white70.withOpacity(.75),
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                      ),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
+
                         ],
                       ),
                     ),
