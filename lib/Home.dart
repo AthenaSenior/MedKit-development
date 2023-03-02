@@ -106,7 +106,7 @@ class HomePageState extends State<HomePage> {
                           Row(
                             children: const [
                               SizedBox(
-                               width: 10
+                               width: 5
                               ),
                           Text(
                               "My Last Scan",
