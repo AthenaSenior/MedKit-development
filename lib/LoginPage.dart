@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
-import 'Home.dart';
 import 'Main.dart';
 import 'RegisterPage.dart';
 
@@ -146,7 +145,6 @@ class LoginPageState extends State<LoginPage> {
                                   .then((value) {
                                 LoginPageState.informationInvalid = false;
                                 RegisterPageState.registerInformationInvalid = false;
-                                HomePageState.loggedInUserEmail = _emailController.text;
                                 return Navigator.push(
                                     context,
                                     MaterialPageRoute(

@@ -1,18 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:med_kit/LoginPage.dart';
 import 'package:med_kit/RegisterPage.dart';
+
+import '../Home.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final DatabaseReference _firebaseDatabase = FirebaseDatabase.instance.ref();
+  var users = [];
   // Login Function
   Future<User?> logInToSystem(String email, String password) async {
     var user;
     try {
       user = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+      HomePageState.loggedInUserEmail = email;
     } on FirebaseAuthException catch (e) {
       if(e.message != null) {
         LoginPageState.informationInvalid = true;
@@ -59,10 +64,20 @@ class AuthService {
         user = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
+        getUsers();
+        int newUserId = users.length + 1;
+
         await _firestore
             .collection("Med-Kit User")
             .doc(user.user!.uid)
-            .set({'userName': name, 'email': email});
+            .set({'userName': name, 'email': email, "note": "", "ID": newUserId.toString()});
+
+        _firebaseDatabase.child("Users").set(newUserId);
+        _firebaseDatabase.child("Users").child(newUserId.toString()).set({
+          "email" : email,
+          "username" : name,
+          "note": "",
+        });
 
       } on FirebaseAuthException catch (e) {
         // Catch another issues
@@ -93,4 +108,14 @@ class AuthService {
       return user.user;
     }
   }
+
+  Future<void> getUsers()
+  async {
+    final ref = FirebaseDatabase.instance.ref("Users");
+    final snapshot = await ref.get();
+    for (var child in snapshot.children) {
+      users.add(child.value);
+    }
+  }
+
 }

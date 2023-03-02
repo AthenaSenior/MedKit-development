@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:med_kit/service/auth.dart';
 import 'FAQ.dart';
 import 'Home.dart';
+import 'LoginPage.dart';
 import 'Profile.dart';
 import 'Scan.dart';
 
@@ -11,13 +13,15 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int selectedPage = 0;
-  var noScanPage = true;
+  var hideBar = false;
+  final AuthService _authService = AuthService();
 
   final _pageOptions = [
     const HomePage(),
     const Profile(),
     const Scan(),
-    const FAQ()
+    const FAQ(),
+    const LoginPage()
   ];
 
   @override
@@ -26,7 +30,7 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.white,
         body: _pageOptions[selectedPage],
        bottomNavigationBar: Visibility(
-         visible: noScanPage,
+         visible: !hideBar,
          child:
          BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -58,10 +62,18 @@ class _MainPageState extends State<MainPage> {
           setState(() {
             selectedPage = i; // index
             if(selectedPage == 2) {
-              noScanPage = false;
+              hideBar = true;
+            }
+            else if(selectedPage == 4){
+              _authService.signOut();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      const LoginPage()));
             }
             else{
-              noScanPage = true;
+              hideBar = false;
             }
           });
         },
