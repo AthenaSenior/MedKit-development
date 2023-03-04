@@ -5,15 +5,21 @@ class Loader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.black,
-        body: Center(
-          child:
-               Text("We're getting things ready..",
-              style: TextStyle(fontSize: 18, color: Colors.white)
-               ),
-                //Image.network("https://www.superiorlawncareusa.com/wp-content/uploads/2020/05/loading-gif-png-5.gif")
-          )
-    );
+    return Scaffold(
+      backgroundColor: Colors.black.withOpacity(.75),
+        body:Center(child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset("assets/images/loading.gif",
+            width: 60, height: 60),
+            const Text("We're getting things ready..",
+                style: TextStyle(fontSize: 18, color: Colors.white)
+            ),
+          ],
+        ),
+        ),
+          );
+
   }
 }

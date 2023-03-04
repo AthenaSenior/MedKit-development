@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:med_kit/LoginPage.dart';
 import 'package:med_kit/RegisterPage.dart';
 
@@ -9,8 +8,7 @@ import '../Home.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final DatabaseReference _firebaseDatabase = FirebaseDatabase.instance.ref();
-  var users = [];
+
   // Login Function
   Future<User?> logInToSystem(String email, String password) async {
     var user;
@@ -64,19 +62,17 @@ class AuthService {
         user = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
-        getUsers();
-        int newUserId = users.length + 1;
-
-        await _firestore
+        FirebaseFirestore.instance.collection('Med-Kit User').get().then((value) =>
+        {
+          _firestore
             .collection("Med-Kit User")
             .doc(user.user!.uid)
-            .set({'userName': name, 'email': email, "note": "", "ID": newUserId.toString()});
-
-        _firebaseDatabase.child("Users").set(newUserId);
-        _firebaseDatabase.child("Users").child(newUserId.toString()).set({
-          "email" : email,
-          "username" : name,
+            .set({
+          'userName': name,
+          'email': email,
           "note": "",
+          "ID": (value.docs.length + 1)
+        })
         });
 
       } on FirebaseAuthException catch (e) {
@@ -106,15 +102,6 @@ class AuthService {
       var user =
           await _auth.createUserWithEmailAndPassword(email: "", password: "");
       return user.user;
-    }
-  }
-
-  Future<void> getUsers()
-  async {
-    final ref = FirebaseDatabase.instance.ref("Users");
-    final snapshot = await ref.get();
-    for (var child in snapshot.children) {
-      users.add(child.value);
     }
   }
 

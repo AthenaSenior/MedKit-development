@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:med_kit/Home.dart';
 import 'package:med_kit/service/auth.dart';
+import 'Main.dart';
 import 'RegisterPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -148,7 +148,7 @@ class LoginPageState extends State<LoginPage> {
                                 return Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const HomePage()));
+                                        builder: (context) => MainPage()));
                               });
                             });
                           },

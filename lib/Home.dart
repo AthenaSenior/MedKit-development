@@ -3,11 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart' as fbDb;
 import 'package:med_kit/Scan.dart';
 import 'package:med_kit/service/auth.dart';
-
-import 'FAQ.dart';
 import 'Loader.dart';
-import 'LoginPage.dart';
-import 'Profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,7 +22,6 @@ class HomePageState extends State<HomePage> {
   var userMedicines = [];
   bool isScannedBefore = false, isLoading = true;
   int selectedPage = 0;
-  final AuthService _authService = AuthService();
 
   Future<void> getLoggedInUserInfo()
   async {
@@ -371,79 +366,6 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
           ]),
-        ),
-    bottomNavigationBar:
-        BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            label: 'Home',
-            ),
-            BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.grey),
-            label: 'Profile',
-            ),
-            BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_scanner, color: Colors.grey),
-            label: 'Scan Drugs',
-            ),
-            BottomNavigationBarItem(
-            icon: Icon(Icons.question_answer, color: Colors.grey),
-            label: 'FAQ',
-            ),
-            BottomNavigationBarItem(
-            icon: Icon(Icons.logout, color: Colors.grey),
-            label: 'Log Out',
-            ),
-        ],
-        currentIndex: selectedPage,
-        selectedItemColor: Colors.blueAccent,
-        onTap: (i){
-        setState(() {
-            switch(i)
-            {
-              // No case 0 since we are in homepage.
-              case 1:
-                {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                          const Profile()));
-                }
-                break;
-              case 2:
-                {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                          const Scan()));
-                }
-                break;
-              case 3:
-                {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                          const FAQ()));
-                }
-                break;
-              case 4:
-                {
-                  _authService.signOut();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                          const LoginPage()));
-                }
-                break;
-            }
-        });
-        },
         ),
       ),
     );

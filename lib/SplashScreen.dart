@@ -140,8 +140,6 @@ class _SplashScreenState extends State<SplashScreen>
                   Text(splashScreenSentence,
                       style: const TextStyle(fontSize: 18)),
                 ]),
-            // Buraya daha çok widget ekleyebilirsiniz virgüllerle
-            // @@ Author Egemen
           ],
         ),
       ),
