@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
     setRotation(360);
     animationController.forward(from: 0);
     startTimer();
-    var intValue = Random().nextInt(7); // Value is >= 0 and < 10.
+    var intValue = Random().nextInt(8); // Value is >= 0 and < 8.
     splashScreenSentence = splashScreenSentences[intValue];
   }
 
