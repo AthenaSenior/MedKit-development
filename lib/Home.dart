@@ -231,11 +231,6 @@ class HomePageState extends State<HomePage> {
                               ),
                       ],
                     ),
-                   /* SizedBox(
-                        width: size.height * .05
-                    ),
-                    Image.asset("assets/images/medkit_logo.png",
-                        width: 60, height: 60)*/
                     ],
                     ),
             ),
