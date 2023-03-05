@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
     const HomePage(),
     const Profile(),
     const Scan(),
-    const FAQ(),
+    FAQ(),
     const LoginPage()
   ];
 
