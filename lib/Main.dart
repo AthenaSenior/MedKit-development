@@ -13,6 +13,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int selectedPage = 0;
+  bool canGoBack = false;
   var hideBar = false;
   final AuthService _authService = AuthService();
 
@@ -26,7 +27,15 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+      setState(() {
+        selectedPage = 0;
+        hideBar = false;
+      });
+      return false;
+      },
+    child: Scaffold(
         backgroundColor: Colors.white,
         body: _pageOptions[selectedPage],
        bottomNavigationBar: Visibility(
@@ -63,6 +72,7 @@ class _MainPageState extends State<MainPage> {
             selectedPage = i; // index
             if(selectedPage == 2) {
               hideBar = true;
+              canGoBack = true;
             }
             else if(selectedPage == 4){
               _authService.signOut();
@@ -73,12 +83,14 @@ class _MainPageState extends State<MainPage> {
                       const LoginPage()));
             }
             else{
+              canGoBack = false;
               hideBar = false;
             }
           });
         },
       ),
       ),
+    ),
     );
   }
 }
