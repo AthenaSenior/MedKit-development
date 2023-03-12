@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 class DrugDetail extends StatelessWidget {
   DrugDetail({super.key, required this.drugName, required this.drugPicture, required this.drugLongDesc});
+  // Constructor takes the attributes of drugs from scanner modal or main screen.
+  // So, we do not have to query for second time. This will improve the performance of our app.
+  // @Egemen
 
   final String drugName, drugPicture, drugLongDesc;
-
   String backgroundImage = "", title= "";
+  //Variable initializations.
 
   void createUIWithHour()
   {
@@ -29,7 +32,7 @@ class DrugDetail extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Main widget
     createUIWithHour();
     var size = MediaQuery.of(context).size;
     return Scaffold(

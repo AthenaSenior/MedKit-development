@@ -10,18 +10,19 @@ class RegisterPage extends StatefulWidget {
 }
 
 class RegisterPageState extends State<RegisterPage> {
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordAgainController =
-  TextEditingController();
+  final TextEditingController _passwordAgainController = TextEditingController();
   static bool registerInformationInvalid = false;
   static String errorMessage = "";
   bool _listTileCheckBox = false;
   final AuthService _authService = AuthService();
+  // Variables for register
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Main widget
     var size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,

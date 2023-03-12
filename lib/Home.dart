@@ -12,156 +12,112 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  static String loggedInUserEmail = "";
-
-  String backgroundImage = "", title= "", userId= "", name = "",
-  lastScannedDrugName = "", lastScannedDrugShortDesc = "", lastScannedDrugPic = "", lastScannedDrugLongDesc = "",
-      secondToLastDrugName = "", secondToLastDrugDesc = "", secondToLastDrugUrl = "", secondToLastDrugLongDesc = "",
-      thirdToLastDrugName = "", thirdToLastDrugDesc = "", thirdToLastDrugUrl = "", thirdToLastDrugLongDesc = "",
-      fourthToLastDrugName = "", fourthToLastDrugDesc = "", fourthToLastDrugUrl = "", fourthToLastDrugLongDesc = "",
-      fifthToLastDrugName = "", fifthToLastDrugDesc = "", fifthToLastDrugUrl = "", fifthToLastDrugLongDesc = "",
-      sixthToLastDrugName = "",  sixthToLastDrugDesc = "", sixthToLastDrugUrl = "", sixthToLastDrugLongDesc = "";
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   final fbDb.FirebaseDatabase database = fbDb.FirebaseDatabase.instance;
-
   fbDb.DatabaseReference ref = fbDb.FirebaseDatabase.instance.ref("UserMedicine");
+  // Firebase variables
 
-  var userMedicines = [];
+  static String loggedInUserEmail = "";
+  String backgroundImage = "", title = "", userId = "", name = "";
+  // String variables for UI
 
-  bool isScannedBefore = false, isLoading = true, lastTwo = false, lastThree = false, lastFour = false, lastFive = false, lastSix = false;
+  var userMedicines = [], drugNames = [], drugShortDescriptions = [],
+      drugPictures = [], drugLongDescriptions = [], drugVisibilities = [false, false, false, false, false, false];
+  // Data storages
 
+  bool isScannedBefore = false, isLoading = true;
+  // State manager flag(s)
 
   Future<void> getLoggedInUserInfo()
   async {
+
+    // Query user by his/her e-mail
+    // E-mail is can be considered as unique key
+    // Primary key is ID @Egemen
+
     var snapshot = await firestore.collection("Med-Kit User").
     where('email', isEqualTo: loggedInUserEmail).get();
     setState(() {
       name = snapshot.docs[0].get('userName');
     });
-    try { // If user has scanned drugs, we execute queries and
-      // show them in UI
-      fbDb.Query query = ref.orderByChild("UserId").equalTo(
-          snapshot.docs[0].get("ID"));
-      fbDb.DataSnapshot event = await query.get();
-      for (var child in event.children) {
-        userMedicines.add(child.value);
-      }
-      //
-      try {
-            var medicineId = userMedicines[userMedicines.length - 2]["ScannedDrugId"];
-            ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(
-                medicineId.toString());
-            event = await ref.get();
-            if (event.exists) {
+
+
+    try {
+
+        // If queried user has scanned drugs, we execute queries and
+        // show them in UI @Egemen
+
+        fbDb.Query query = ref.orderByChild("UserId").equalTo(
+            snapshot.docs[0].get("ID"));
+        fbDb.DataSnapshot event = await query.get();
+        for (var child in event.children) {
+          userMedicines.add(child.value);
+        }
+
+        // If user scanned at least one drug @Egemen
+
+        if(userMedicines.isNotEmpty) {
+          setState(() {
+            isScannedBefore = true;
+          });
+          for (int i = 1; i < 7; i++) {
+            try{
+              var medicineId = userMedicines[userMedicines.length -
+                  i]["ScannedDrugId"];
+              ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(
+                  medicineId.toString());
+              event = await ref.get();
+              if (event.exists) { // Add each drug belongs to user to list
+                setState(() {
+                  var data = Map<String, dynamic>.from(event.value as Map);
+                  drugNames.add(data["Name"]);
+                  drugShortDescriptions.add(data["ShortDesc"]);
+                  drugPictures.add(data["PictureUrl"]);
+                  drugLongDescriptions.add(data ["LongDesc"]);
+                  drugVisibilities[i - 1] = true;
+                });
+              }
+            }
+          catch(error) {// If user scanned less than 6 drugs,
+              // Add empty data to list to block NullPointerException
+              // (This means user see nothing in
+              // corresponding rows if they scanned less than five drugs) @Egemen
               setState(() {
-                var data = Map<String, dynamic>.from(event.value as Map);
-                secondToLastDrugName = data["Name"];
-                secondToLastDrugDesc = data["ShortDesc"];
-                secondToLastDrugUrl = data["PictureUrl"];
-                secondToLastDrugLongDesc = data ["LongDesc"];
-                lastTwo = true;
+              drugNames.add(' ');
+              drugShortDescriptions.add(' ');
+              drugPictures.add(' ');
+              drugLongDescriptions.add(' ');
+              drugVisibilities[i - 1] = false;
               });
             }
+          }
+          print(drugNames);
+        }
 
-            medicineId = userMedicines[userMedicines.length - 3]["ScannedDrugId"];
-            ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(
-                medicineId.toString());
-            event = await ref.get();
-            if (event.exists) {
-              setState(() {
-                var data = Map<String, dynamic>.from(event.value as Map);
-                thirdToLastDrugName = data["Name"];
-                thirdToLastDrugDesc = data["ShortDesc"];
-                thirdToLastDrugUrl = data["PictureUrl"];
-                thirdToLastDrugLongDesc = data ["LongDesc"];
-                lastThree = true;
-              });
-            }
+        else{ // If user scanned no drugs, then no drugs will be queried. @Egemen
+          // Change the state.
+          isScannedBefore = false;
+        }
 
-            medicineId = userMedicines[userMedicines.length - 4]["ScannedDrugId"];
-            ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(
-                medicineId.toString());
-            event = await ref.get();
-            if (event.exists) {
-              setState(() {
-                var data = Map<String, dynamic>.from(event.value as Map);
-                fourthToLastDrugName = data["Name"];
-                fourthToLastDrugDesc = data["ShortDesc"];
-                fourthToLastDrugUrl = data["PictureUrl"];
-                fourthToLastDrugLongDesc = data ["LongDesc"];
-                lastFour = true;
-              });
-            }
-
-            medicineId = userMedicines[userMedicines.length - 5]["ScannedDrugId"];
-            ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(
-                medicineId.toString());
-            event = await ref.get();
-            if (event.exists) {
-              setState(() {
-                var data = Map<String, dynamic>.from(event.value as Map);
-                fifthToLastDrugName = data["Name"];
-                fifthToLastDrugDesc = data["ShortDesc"];
-                fifthToLastDrugUrl = data["PictureUrl"];
-                fifthToLastDrugLongDesc = data ["LongDesc"];
-                lastFive = true;
-              });
-            }
-
-            medicineId = userMedicines[userMedicines.length - 6]["ScannedDrugId"];
-            ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(
-                medicineId.toString());
-            event = await ref.get();
-            if (event.exists) {
-              setState(() {
-                var data = Map<String, dynamic>.from(event.value as Map);
-                sixthToLastDrugName = data["Name"];
-                sixthToLastDrugDesc = data["ShortDesc"];
-                sixthToLastDrugUrl = data["PictureUrl"];
-                sixthToLastDrugLongDesc = data ["LongDesc"];
-                lastSix = true;
-              });
-            }
-      }
-      catch(error) {
-        print("No such element");
-      }
-      //
-
-      int lastDrug = userMedicines.last["ScannedDrugId"];
-      ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(
-          lastDrug.toString());
-      event = await ref.get();
-      if (event.exists) {
-        setState(() {
-          isScannedBefore = true;
-          var data = Map<String, dynamic>.from(event.value as Map);
-          lastScannedDrugPic = data["PictureUrl"];
-          lastScannedDrugShortDesc = data["ShortDesc"];
-          lastScannedDrugName = data["Name"];
-          lastScannedDrugLongDesc = data ["LongDesc"];
+        setState(() { // In both cases, finally close the loader. @Egemen
           isLoading = false;
         });
-      }
-    }
-      catch(error) // If user has no drugs, this block executes,
-      // we only show the page with no data
+
+        }
+      catch(error) // If user query fail @Egemen
       {
-        setState(() {
-          isLoading = false;
-        });
+        print("User query failed.");
       }
   }
 
   @override
   void initState() {
     super.initState();
-    getLoggedInUserInfo();
+    getLoggedInUserInfo(); // Execute the function as initial state @Egemen
   }
 
-  void createUIWithHour()
+  void createUIWithHour() // UI Operations @Egemen
   {
     var dt = DateTime.now().hour;
     if(dt >= 6 && dt < 12)
@@ -187,7 +143,7 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Main widget
     createUIWithHour();
     var size = MediaQuery.of(context).size;
     return WillPopScope(
@@ -295,7 +251,7 @@ class HomePageState extends State<HomePage> {
                                                       alignment: Alignment.centerLeft,
                                                       child:
                                                       Text(
-                                                          lastScannedDrugName,
+                                                          drugNames.isNotEmpty ? drugNames[0] : 'No Medicine',
                                                           style: const TextStyle(
                                                               color: Colors.black,
                                                               fontSize: 20,
@@ -309,7 +265,7 @@ class HomePageState extends State<HomePage> {
                                                     alignment: Alignment.centerLeft,
                                                     child:
                                                     Text(
-                                                        lastScannedDrugShortDesc.replaceAll("<", "\n\n"),
+                                                        drugShortDescriptions.isNotEmpty ? drugShortDescriptions[0].replaceAll("<", "\n\n") : 'No Medicine',
                                                         style: const TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 12)
@@ -320,7 +276,7 @@ class HomePageState extends State<HomePage> {
                                           ),
                                             ],
                                             ),
-                                            Image.network(lastScannedDrugPic,
+                                            Image.network(drugPictures.isNotEmpty ? drugPictures[0] : 'No Medicine',
                                                 width: 130, height: 120),
                                             ],
                                 ),
@@ -336,7 +292,7 @@ class HomePageState extends State<HomePage> {
                                           context,
                                           MaterialPageRoute(
                                           builder: (context) =>
-                                          DrugDetail(drugName: lastScannedDrugName, drugPicture: lastScannedDrugPic, drugLongDesc: lastScannedDrugLongDesc))),
+                                          DrugDetail(drugName: drugNames[0], drugPicture: drugPictures[0], drugLongDesc: drugLongDescriptions[0]))),
                                       },
                                       child: const Text('DETAIL >>',
                                         style: TextStyle(
@@ -416,7 +372,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    secondToLastDrugName,
+                                                    drugNames.isNotEmpty ? drugNames[1] : 'No Medicine',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
@@ -430,7 +386,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    secondToLastDrugDesc.replaceAll("<", "\n"),
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[1].replaceAll("<", "\n") : 'No Medicine Description',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 10)
@@ -442,9 +398,9 @@ class HomePageState extends State<HomePage> {
                                   ],
                                 ),
                                 Visibility(
-                                  visible: lastTwo,
+                                  visible: drugVisibilities[1],
                                 child:
-                                Image.network(secondToLastDrugUrl,
+                                Image.network(drugPictures.isNotEmpty ? drugPictures[1] : '',
                                     width: 90, height: 90),),
                               ],
                             ),
@@ -455,7 +411,7 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                visible: lastTwo,
+                                visible: drugVisibilities[1],
                                 child:
                                 TextButton(
                                   onPressed: () => {
@@ -463,7 +419,84 @@ class HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DrugDetail(drugName: secondToLastDrugName, drugPicture: secondToLastDrugUrl, drugLongDesc: secondToLastDrugLongDesc))),
+                                                DrugDetail(drugName: drugNames[1], drugPicture: drugPictures[1], drugLongDesc: drugLongDescriptions[1]))),
+                                  },
+                                  child: const Text('DETAIL >>',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                                height: size.height * .009
+                            ),
+                            Row(
+                              children:[
+                                Column(
+                                  children: [
+                                    Container(
+                                      constraints: BoxConstraints(minWidth: size.width * .20, maxWidth: size.height * .2684),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      child: Column(
+                                          children: [
+                                            Align(
+                                                alignment: Alignment.centerLeft,
+                                                child:
+                                                Text(
+                                                    drugNames.isNotEmpty ? drugNames[2] : 'No Medicine',
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        fontWeight: FontWeight.bold)
+                                                )
+                                            ),
+                                            SizedBox(
+                                                height: size.height * .02
+                                            ),
+                                            Align(
+                                                alignment: Alignment.centerLeft,
+                                                child:
+                                                Text(
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[2].replaceAll("<", "\n") : '',
+                                                    style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10)
+                                                )
+                                            ),
+                                          ]
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Visibility(
+                                  visible: drugVisibilities[2],
+                                  child:
+                                  Image.network(drugPictures.isNotEmpty ? drugPictures[2] : '',
+                                      width: 90, height: 90),),
+                              ],
+                            ),
+                            SizedBox(
+                                height: size.height * .003
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child:
+                              Visibility(
+                                visible: drugVisibilities[2],
+                                child:
+                                TextButton(
+                                  onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DrugDetail(drugName: drugNames[2], drugPicture: drugPictures[2], drugLongDesc: drugLongDescriptions[2]))),
                                   },
                                   child: const Text('DETAIL >>',
                                     style: TextStyle(
@@ -494,7 +527,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                   thirdToLastDrugName,
+                                                    drugNames.isNotEmpty ? drugNames[3] : 'No Medicine',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
@@ -508,7 +541,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    thirdToLastDrugDesc.replaceAll("<", "\n"),
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[3].replaceAll("<", "\n") : '',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 10)
@@ -520,9 +553,9 @@ class HomePageState extends State<HomePage> {
                                   ],
                                 ),
                                 Visibility(
-                                  visible: lastThree,
+                                  visible: drugVisibilities[3],
                                   child:
-                                  Image.network(thirdToLastDrugUrl,
+                                  Image.network(drugPictures.isNotEmpty ? drugPictures[3] : '',
                                       width: 90, height: 90),),
                               ],
                             ),
@@ -533,7 +566,7 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                visible: lastThree,
+                                visible: drugVisibilities[3],
                                 child:
                                 TextButton(
                                   onPressed: () => {
@@ -541,7 +574,7 @@ class HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DrugDetail(drugName: thirdToLastDrugName, drugPicture: thirdToLastDrugUrl, drugLongDesc: thirdToLastDrugLongDesc))),
+                                                DrugDetail(drugName: drugNames[3], drugPicture: drugPictures[3], drugLongDesc: drugLongDescriptions[3]))),
                                   },
                                   child: const Text('DETAIL >>',
                                     style: TextStyle(
@@ -572,7 +605,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    fourthToLastDrugName,
+                                                    drugNames.isNotEmpty ? drugNames[4] : 'No Medicine',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
@@ -586,7 +619,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    fourthToLastDrugDesc.replaceAll("<", "\n"),
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[4].replaceAll("<", "\n") : '',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 10)
@@ -598,9 +631,9 @@ class HomePageState extends State<HomePage> {
                                   ],
                                 ),
                                 Visibility(
-                                  visible: lastFour,
+                                  visible: drugVisibilities[4],
                                   child:
-                                  Image.network(fourthToLastDrugUrl,
+                                  Image.network(drugPictures.isNotEmpty ? drugPictures[4] : '',
                                       width: 90, height: 90),),
                               ],
                             ),
@@ -611,7 +644,7 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                visible: lastFour,
+                                visible: drugVisibilities[4],
                                 child:
                                 TextButton(
                                   onPressed: () => {
@@ -619,7 +652,7 @@ class HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DrugDetail(drugName: fourthToLastDrugName, drugPicture: fourthToLastDrugUrl, drugLongDesc: fourthToLastDrugLongDesc))),
+                                                DrugDetail(drugName: drugNames[4], drugPicture: drugPictures[4], drugLongDesc: drugLongDescriptions[4]))),
                                   },
                                   child: const Text('DETAIL >>',
                                     style: TextStyle(
@@ -650,7 +683,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    fifthToLastDrugName,
+                                                    drugNames.isNotEmpty ? drugNames[5] : 'No Medicine',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
@@ -664,7 +697,7 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    fifthToLastDrugDesc.replaceAll("<", "\n"),
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[5].replaceAll("<", "\n") : '',
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 10)
@@ -676,9 +709,9 @@ class HomePageState extends State<HomePage> {
                                   ],
                                 ),
                                 Visibility(
-                                  visible: lastFive,
+                                  visible: drugVisibilities[5],
                                   child:
-                                  Image.network(fifthToLastDrugUrl,
+                                  Image.network(drugPictures.isNotEmpty ? drugPictures[5] : '',
                                       width: 90, height: 90),),
                               ],
                             ),
@@ -689,7 +722,7 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                visible: lastFive,
+                                visible: drugVisibilities[5],
                                 child:
                                 TextButton(
                                   onPressed: () => {
@@ -697,85 +730,7 @@ class HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DrugDetail(drugName: fifthToLastDrugName, drugPicture: fifthToLastDrugUrl, drugLongDesc: fifthToLastDrugLongDesc))),
-                                  },
-                                  child: const Text('DETAIL >>',
-                                    style: TextStyle(
-                                        fontSize: 21,
-                                        color: Colors.blueAccent,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                height: size.height * .009
-                            ),
-
-                            Row(
-                              children:[
-                                Column(
-                                  children: [
-                                    Container(
-                                      constraints: BoxConstraints(minWidth: size.width * .20, maxWidth: size.height * .2684),
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10)
-                                      ),
-                                      child: Column(
-                                          children: [
-                                            Align(
-                                                alignment: Alignment.centerLeft,
-                                                child:
-                                                Text(
-                                                    sixthToLastDrugName,
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.bold)
-                                                )
-                                            ),
-                                            SizedBox(
-                                                height: size.height * .02
-                                            ),
-                                            Align(
-                                                alignment: Alignment.centerLeft,
-                                                child:
-                                                Text(
-                                                    sixthToLastDrugDesc.replaceAll("<", "\n"),
-                                                    style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 10)
-                                                )
-                                            ),
-                                          ]
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Visibility(
-                                  visible: lastSix,
-                                  child:
-                                  Image.network(sixthToLastDrugUrl,
-                                      width: 90, height: 90),),
-                              ],
-                            ),
-                            SizedBox(
-                                height: size.height * .003
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child:
-                              Visibility(
-                                visible: lastSix,
-                                child:
-                                TextButton(
-                                  onPressed: () => {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DrugDetail(drugName: sixthToLastDrugName, drugPicture: sixthToLastDrugUrl, drugLongDesc: sixthToLastDrugLongDesc))),
+                                                DrugDetail(drugName: drugNames[5], drugPicture: drugPictures[5], drugLongDesc: drugLongDescriptions[5]))),
                                   },
                                   child: const Text('DETAIL >>',
                                     style: TextStyle(

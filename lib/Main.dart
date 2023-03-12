@@ -11,6 +11,8 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
+// This is controller page of our app. Other pages are showing as body of this page. @Egemen
+
 class _MainPageState extends State<MainPage> {
   int selectedPage = 0;
   bool canGoBack = false;
@@ -26,7 +28,7 @@ class _MainPageState extends State<MainPage> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Main widget
     return WillPopScope(
       onWillPop: () async {
       setState(() {

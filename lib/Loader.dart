@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 class Loader extends StatelessWidget {
   const Loader({super.key});
 
+  // This screen will be shown until the data will be loaded by app.
+  // Feel free to edit the design of here @Egemen
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

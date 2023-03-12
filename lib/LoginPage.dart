@@ -15,9 +15,10 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   static bool informationInvalid = false;
   final AuthService _authService = AuthService();
+  // Initialization of variables
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Main widget
     var size = MediaQuery.of(context).size;
     return WillPopScope(
         onWillPop: () async => false,

@@ -1,27 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'LoginPage.dart';
-import 'firebase_options.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MedKit());
-}
-
-class MedKit extends StatelessWidget {
-  const MedKit({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: SplashScreen(),
-    );
-  }
-}
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,19 +11,20 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  // Animation - Rotation Function Author Egemen
+
   bool loading = false;
   late Animation<double> animation;
   late AnimationController animationController;
+  int _start = 10;
+  late Timer splashTimer;
+  // Initialization of variables @Egemen
 
+  // Animation - Rotation Function @Egemen
   void setRotation(int degrees) {
     final angle = degrees * pi / 180;
     animation =
         Tween<double>(begin: 0, end: angle).animate(animationController);
   }
-
-  int _start = 10;
-  late Timer splashTimer;
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -56,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        const LoginPage())); // Buradan yeni sayfaya yönlendireceğiz. Author Egemen
+                        const LoginPage())); // We will redirect them to login page by here. @Egemen
           });
           timer.cancel();
         } else if (_start == 6) {
@@ -74,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   late String splashScreenSentence;
-  List<String> splashScreenSentences = [
+  List<String> splashScreenSentences = [ // Random sentence from here will be shown @Egemen
     "Interesting fact : \nI am better than google search ;)",
     "Waiting you for scan..",
     "Are you ill again ? :/",
@@ -95,16 +76,17 @@ class _SplashScreenState extends State<SplashScreen>
     startTimer();
     var intValue = Random().nextInt(8); // Value is >= 0 and < 8.
     splashScreenSentence = splashScreenSentences[intValue];
+    // Executions as initial state @Egemen
   }
 
   @override
   void dispose() {
     animationController.dispose();
-    super.dispose();
+    super.dispose(); // Dispose for animation @Egemen
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Main widget
     return Scaffold(
       body: Container(
         constraints: const BoxConstraints.expand(),

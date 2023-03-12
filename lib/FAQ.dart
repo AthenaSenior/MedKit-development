@@ -4,6 +4,7 @@ class FAQ extends StatelessWidget {
   FAQ({super.key});
 
   String backgroundImage = "", title= "";
+  // Variable initializations
 
   void createUIWithHour()
   {
@@ -27,7 +28,7 @@ class FAQ extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Main widget
     createUIWithHour();
     var size = MediaQuery.of(context).size;
     return WillPopScope(
