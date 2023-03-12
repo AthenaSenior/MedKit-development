@@ -18,16 +18,13 @@ class MedKit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: SplashScreen(title: ''),
+      home: SplashScreen(),
     );
   }
 }
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key, required this.title});
-
-  final String title;
-
+  const SplashScreen({super.key});
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -131,7 +128,7 @@ class _SplashScreenState extends State<SplashScreen>
             const SizedBox(height: 20),
             Visibility(
                 visible: loading,
-                child: Image.asset('assets/images/loading-gif.gif',
+                child: Image.asset('assets/images/loading.gif',
                     width: 30, height: 30)),
             const SizedBox(height: 20),
             Column(

@@ -43,11 +43,14 @@ class FAQ extends StatelessWidget {
               )),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
               Widget>[
+            SizedBox(
+                height: size.height * .05
+            ),
             Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
-                    height: size.height * .85,
+                    height: size.height * .87,
                     width: size.width * .95,
                     decoration: BoxDecoration(
                       color: Colors.white70.withOpacity(.75),

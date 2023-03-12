@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart' as fbDb;
 import 'package:med_kit/Scan.dart';
+import 'DrugDetail.dart';
 import 'Loader.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,18 +15,16 @@ class HomePageState extends State<HomePage> {
   static String loggedInUserEmail = "";
 
   String backgroundImage = "", title= "", userId= "", name = "",
-  lastScannedDrugName = "", lastScannedDrugShortDesc = "", lastScannedDrugPic = "",
-      secondToLastDrugName = "", secondToLastDrugDesc = "", secondToLastDrugUrl = "",
-      thirdToLastDrugName = "", thirdToLastDrugDesc = "", thirdToLastDrugUrl = "",
-      fourthToLastDrugName = "", fourthToLastDrugDesc = "", fourthToLastDrugUrl = "",
-      fifthToLastDrugName = "", fifthToLastDrugDesc = "", fifthToLastDrugUrl = "",
-      sixthToLastDrugName = "",  sixthToLastDrugDesc = "", sixthToLastDrugUrl = "";
+  lastScannedDrugName = "", lastScannedDrugShortDesc = "", lastScannedDrugPic = "", lastScannedDrugLongDesc = "",
+      secondToLastDrugName = "", secondToLastDrugDesc = "", secondToLastDrugUrl = "", secondToLastDrugLongDesc = "",
+      thirdToLastDrugName = "", thirdToLastDrugDesc = "", thirdToLastDrugUrl = "", thirdToLastDrugLongDesc = "",
+      fourthToLastDrugName = "", fourthToLastDrugDesc = "", fourthToLastDrugUrl = "", fourthToLastDrugLongDesc = "",
+      fifthToLastDrugName = "", fifthToLastDrugDesc = "", fifthToLastDrugUrl = "", fifthToLastDrugLongDesc = "",
+      sixthToLastDrugName = "",  sixthToLastDrugDesc = "", sixthToLastDrugUrl = "", sixthToLastDrugLongDesc = "";
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final fbDb.FirebaseDatabase database = fbDb.FirebaseDatabase.instance;
-
-  late Color color;
 
   fbDb.DatabaseReference ref = fbDb.FirebaseDatabase.instance.ref("UserMedicine");
 
@@ -61,6 +60,7 @@ class HomePageState extends State<HomePage> {
                 secondToLastDrugName = data["Name"];
                 secondToLastDrugDesc = data["ShortDesc"];
                 secondToLastDrugUrl = data["PictureUrl"];
+                secondToLastDrugLongDesc = data ["LongDesc"];
                 lastTwo = true;
               });
             }
@@ -75,6 +75,7 @@ class HomePageState extends State<HomePage> {
                 thirdToLastDrugName = data["Name"];
                 thirdToLastDrugDesc = data["ShortDesc"];
                 thirdToLastDrugUrl = data["PictureUrl"];
+                thirdToLastDrugLongDesc = data ["LongDesc"];
                 lastThree = true;
               });
             }
@@ -89,6 +90,7 @@ class HomePageState extends State<HomePage> {
                 fourthToLastDrugName = data["Name"];
                 fourthToLastDrugDesc = data["ShortDesc"];
                 fourthToLastDrugUrl = data["PictureUrl"];
+                fourthToLastDrugLongDesc = data ["LongDesc"];
                 lastFour = true;
               });
             }
@@ -103,6 +105,7 @@ class HomePageState extends State<HomePage> {
                 fifthToLastDrugName = data["Name"];
                 fifthToLastDrugDesc = data["ShortDesc"];
                 fifthToLastDrugUrl = data["PictureUrl"];
+                fifthToLastDrugLongDesc = data ["LongDesc"];
                 lastFive = true;
               });
             }
@@ -117,6 +120,7 @@ class HomePageState extends State<HomePage> {
                 sixthToLastDrugName = data["Name"];
                 sixthToLastDrugDesc = data["ShortDesc"];
                 sixthToLastDrugUrl = data["PictureUrl"];
+                sixthToLastDrugLongDesc = data ["LongDesc"];
                 lastSix = true;
               });
             }
@@ -137,6 +141,7 @@ class HomePageState extends State<HomePage> {
           lastScannedDrugPic = data["PictureUrl"];
           lastScannedDrugShortDesc = data["ShortDesc"];
           lastScannedDrugName = data["Name"];
+          lastScannedDrugLongDesc = data ["LongDesc"];
           isLoading = false;
         });
       }
@@ -163,25 +168,21 @@ class HomePageState extends State<HomePage> {
     {
       backgroundImage = "assets/images/morning.jpg";
       title = "☀ Good morning, $name!";
-      color = Colors.black;
     }
     else if (dt >= 12 && dt < 18)
     {
       backgroundImage = "assets/images/afternoon.jpg";
       title = "☀ Good afternoon, $name!";
-      color = Colors.black;
     }
     else if (dt >= 18 && dt < 21)
     {
       backgroundImage = "assets/images/evening.jpg";
       title = "🌙 Good evening, $name!";
-      color = Colors.white;
     }
     else if (dt >= 21 || dt < 6)
     {
       backgroundImage = "assets/images/night.jpg";
       title = "🌙 Good night, $name!";
-      color = Colors.white;
     }
   }
 
@@ -222,13 +223,22 @@ class HomePageState extends State<HomePage> {
                       SizedBox(
                         height: size.height * 0.02,
                       ),
-                              Text(
-                                  "$title\nHow can I help you today?",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: color,
-                                      fontSize: 21)
-                              ),
+                      Container(
+                          color: Colors.black.withOpacity(0.25),
+                          width: size.width * .95,
+                          child:
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child:
+                            Text(
+                            "$title\nHow can I help you today?",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 21)
+                      ),
+                      ),
+                      ),
                       ],
                     ),
                     ],
@@ -317,16 +327,24 @@ class HomePageState extends State<HomePage> {
                                 SizedBox(
                                     height: size.height * .003
                                 ),
-                                const Align(
+                                Align(
                                     alignment: Alignment.centerRight,
                                     child:
-                                    Text(
-                                        "DETAIL >>",
+                                    TextButton(
+                                      onPressed: () => {
+                                          Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                          builder: (context) =>
+                                          DrugDetail(drugName: lastScannedDrugName, drugPicture: lastScannedDrugPic, drugLongDesc: lastScannedDrugLongDesc))),
+                                      },
+                                      child: const Text('DETAIL >>',
                                         style: TextStyle(
-                                            color: Colors.blueAccent,
                                             fontSize: 21,
-                                            fontWeight: FontWeight.bold)
-                                    )
+                                            color: Colors.blueAccent,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                 ),
                                 SizedBox(
                                     height: size.height * .009
@@ -434,19 +452,27 @@ class HomePageState extends State<HomePage> {
                                 height: size.height * .003
                             ),
                             Align(
-                                alignment: Alignment.centerRight,
+                              alignment: Alignment.centerRight,
+                              child:
+                              Visibility(
+                                visible: lastTwo,
                                 child:
-                                    Visibility(
-                                      visible: lastTwo,
-                                child:
-                                const Text(
-                                    "DETAIL >>",
+                                TextButton(
+                                  onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DrugDetail(drugName: secondToLastDrugName, drugPicture: secondToLastDrugUrl, drugLongDesc: secondToLastDrugLongDesc))),
+                                  },
+                                  child: const Text('DETAIL >>',
                                     style: TextStyle(
+                                        fontSize: 21,
                                         color: Colors.blueAccent,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold)
-                                )
-                                    ),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
                             ),
                             SizedBox(
                                 height: size.height * .009
@@ -507,15 +533,23 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                  visible: lastThree,
-                                  child:
-                                  const Text(
-                                      "DETAIL >>",
-                                      style: TextStyle(
-                                          color: Colors.blueAccent,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)
-                                  )
+                                visible: lastThree,
+                                child:
+                                TextButton(
+                                  onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DrugDetail(drugName: thirdToLastDrugName, drugPicture: thirdToLastDrugUrl, drugLongDesc: thirdToLastDrugLongDesc))),
+                                  },
+                                  child: const Text('DETAIL >>',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -577,15 +611,23 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                  visible: lastFour,
-                                  child:
-                                  const Text(
-                                      "DETAIL >>",
-                                      style: TextStyle(
-                                          color: Colors.blueAccent,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)
-                                  )
+                                visible: lastFour,
+                                child:
+                                TextButton(
+                                  onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DrugDetail(drugName: fourthToLastDrugName, drugPicture: fourthToLastDrugUrl, drugLongDesc: fourthToLastDrugLongDesc))),
+                                  },
+                                  child: const Text('DETAIL >>',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -647,15 +689,23 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                  visible: lastFive,
-                                  child:
-                                  const Text(
-                                      "DETAIL >>",
-                                      style: TextStyle(
-                                          color: Colors.blueAccent,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)
-                                  )
+                                visible: lastFive,
+                                child:
+                                TextButton(
+                                  onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DrugDetail(drugName: fifthToLastDrugName, drugPicture: fifthToLastDrugUrl, drugLongDesc: fifthToLastDrugLongDesc))),
+                                  },
+                                  child: const Text('DETAIL >>',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -717,15 +767,23 @@ class HomePageState extends State<HomePage> {
                               alignment: Alignment.centerRight,
                               child:
                               Visibility(
-                                  visible: lastSix,
-                                  child:
-                                  const Text(
-                                      "DETAIL >>",
-                                      style: TextStyle(
-                                          color: Colors.blueAccent,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)
-                                  )
+                                visible: lastSix,
+                                child:
+                                TextButton(
+                                  onPressed: () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DrugDetail(drugName: sixthToLastDrugName, drugPicture: sixthToLastDrugUrl, drugLongDesc: sixthToLastDrugLongDesc))),
+                                  },
+                                  child: const Text('DETAIL >>',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
