@@ -268,7 +268,7 @@ class HomePageState extends State<HomePage> {
                                                         drugShortDescriptions.isNotEmpty ? drugShortDescriptions[0].replaceAll("<", "\n\n") : 'No Medicine',
                                                         style: const TextStyle(
                                                             color: Colors.black,
-                                                            fontSize: 12)
+                                                            fontSize: 10)
                                                     )
                                                 ),
                                                 ]
@@ -281,7 +281,7 @@ class HomePageState extends State<HomePage> {
                                             ],
                                 ),
                                 SizedBox(
-                                    height: size.height * .003
+                                    height: size.height * .0050
                                 ),
                                 Align(
                                     alignment: Alignment.centerRight,
