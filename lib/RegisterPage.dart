@@ -20,6 +20,11 @@ class RegisterPageState extends State<RegisterPage> {
   bool _listTileCheckBox = false;
   final AuthService _authService = AuthService();
   // Variables for register
+  List<String> list = <String>['Male', 'Female'];
+
+  String dropdownValue = 'Male'; // by Default
+
+  IconData icon = Icons.male_rounded;
 
   @override
   Widget build(BuildContext context) { // Main widget
@@ -166,7 +171,58 @@ class RegisterPageState extends State<RegisterPage> {
                                       )),
                                 )),
                             SizedBox(
-                              height: size.height * 0.04,
+                              height: size.height * 0.01,
+                            ),
+                            Row(
+                              children:[
+                                SizedBox(
+                                 width: size.width * 0.03,
+                                ),
+                                Icon(
+                                  icon,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.038,
+                                ),
+                                const Text(
+                                  "Select your gender: ",
+                                  style: TextStyle(color: Colors.white, fontSize: 17),
+                                ),
+                                DropdownButton<String>(
+                                  value: dropdownValue,
+                                  icon: const Icon(Icons.arrow_downward),
+                                  elevation: 14,
+                                  style: const TextStyle(color: Colors.black),
+                                  underline: Container(
+                                    height: 3,
+                                    width: 45,
+                                    color: Colors.white60,
+                                  ),
+                                  onChanged: (String? value) {
+                                    // This is called when the user selects an item.
+                                    setState(() {
+                                      dropdownValue = value!;
+                                      if(dropdownValue == 'Male')
+                                        icon = Icons.male_rounded;
+                                      else
+                                        icon = Icons.female_rounded;
+                                    });
+                                  },
+                                  items: list.map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ]
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            const Divider(
+                                color: Colors.white
                             ),
                             CheckboxListTile(
                               value: _listTileCheckBox,
@@ -209,6 +265,7 @@ class RegisterPageState extends State<RegisterPage> {
                                       _emailController.text,
                                       _passwordController.text,
                                       _passwordAgainController.text,
+                                      dropdownValue,
                                       _listTileCheckBox)
                                       .then((value) {
                                     LoginPageState.informationInvalid = false;

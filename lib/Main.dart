@@ -8,20 +8,22 @@ import 'Scan.dart';
 
 class MainPage extends StatefulWidget {
   @override
-  _MainPageState createState() => _MainPageState();
+  MainPageState createState() => MainPageState();
 }
 
 // This is controller page of our app. Other pages are showing as body of this page. @Egemen
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
+
+  static String loggedInUserKey = "";
   int selectedPage = 0;
   bool canGoBack = false;
   var hideBar = false;
   final AuthService _authService = AuthService();
 
   final _pageOptions = [
-    const HomePage(),
-    const Profile(),
+    HomePage(loggedInUserKey: loggedInUserKey),
+    Profile(loggedInUserKey: loggedInUserKey),
     const Scan(),
     FAQ(),
     const LoginPage()

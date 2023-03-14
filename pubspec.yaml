@@ -9,6 +9,8 @@ environment:
   sdk: '>=2.18.5 <3.0.0'
 
 dependencies:
+  loading_animation_widget:
+
   flutter:
     sdk: flutter
 

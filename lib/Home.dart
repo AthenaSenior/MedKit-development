@@ -6,7 +6,10 @@ import 'DrugDetail.dart';
 import 'Loader.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.loggedInUserKey});
+
+  final String loggedInUserKey;
+
   @override
   HomePageState createState() => HomePageState();
 }
@@ -18,7 +21,7 @@ class HomePageState extends State<HomePage> {
   fbDb.DatabaseReference ref = fbDb.FirebaseDatabase.instance.ref("UserMedicine");
   // Firebase variables
 
-  static String loggedInUserEmail = "";
+
   String backgroundImage = "", title = "", userId = "", name = "";
   // String variables for UI
 
@@ -37,7 +40,7 @@ class HomePageState extends State<HomePage> {
     // Primary key is ID @Egemen
 
     var snapshot = await firestore.collection("Med-Kit User").
-    where('email', isEqualTo: loggedInUserEmail).get();
+    where('email', isEqualTo: widget.loggedInUserKey).get();
     setState(() {
       name = snapshot.docs[0].get('userName');
     });
@@ -231,7 +234,14 @@ class HomePageState extends State<HomePage> {
                               ],
                           ),
                           SizedBox(
-                             height: size.height * .02
+                             height: size.height * .01
+                          ),
+                          Visibility(
+                            visible: drugVisibilities[1],
+                            child:
+                            const Divider(
+                                color: Colors.black
+                            ),
                           ),
                         Column(
                               children: [
@@ -303,7 +313,7 @@ class HomePageState extends State<HomePage> {
                                     ),
                                 ),
                                 SizedBox(
-                                    height: size.height * .009
+                                    height: size.height * .001
                                 ),
                                 ],
                               )
@@ -430,6 +440,13 @@ class HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
+                            Visibility(
+                              visible: drugVisibilities[1],
+                                  child:
+                                  const Divider(
+                                      color: Colors.black
+                                  ),
+                            ),
                             SizedBox(
                                 height: size.height * .009
                             ),
@@ -505,6 +522,13 @@ class HomePageState extends State<HomePage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: drugVisibilities[2],
+                              child:
+                              const Divider(
+                                  color: Colors.black
                               ),
                             ),
                             SizedBox(
@@ -585,6 +609,13 @@ class HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
+                            Visibility(
+                              visible: drugVisibilities[3],
+                              child:
+                              const Divider(
+                                  color: Colors.black
+                              ),
+                            ),
                             SizedBox(
                                 height: size.height * .009
                             ),
@@ -663,6 +694,13 @@ class HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
+                            Visibility(
+                              visible: drugVisibilities[4],
+                              child:
+                              const Divider(
+                                  color: Colors.black
+                              ),
+                            ),
                             SizedBox(
                                 height: size.height * .009
                             ),
@@ -739,6 +777,13 @@ class HomePageState extends State<HomePage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: drugVisibilities[5],
+                              child:
+                              const Divider(
+                                  color: Colors.black
                               ),
                             ),
                             SizedBox(

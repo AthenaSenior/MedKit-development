@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:med_kit/LoginPage.dart';
 import 'package:med_kit/RegisterPage.dart';
-
-import '../Home.dart';
+import 'package:intl/intl.dart';
+import '../Main.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,7 +15,7 @@ class AuthService {
     try {
       user = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      HomePageState.loggedInUserEmail = email;
+      MainPageState.loggedInUserKey = email;
     } on FirebaseAuthException catch (e) {
       if(e.message != null) {
         LoginPageState.informationInvalid = true;
@@ -33,7 +33,7 @@ class AuthService {
   // Register function
   Future<User?> registerToSystem(
       String name, String email, String password,
-      String passwordRepeat, bool checked) async {
+      String passwordRepeat, String gender, bool checked) async {
 
     // Consent text checked or not: Check other fields first.
     if(name.isEmpty || email.isEmpty || password.isEmpty)
@@ -71,7 +71,9 @@ class AuthService {
           'userName': name,
           'email': email,
           "note": "",
-          "ID": (value.docs.length + 1)
+          "ID": (value.docs.length + 1),
+            "date": DateFormat('yMd').format(DateTime.now()).toString(),
+            "gender": gender
         })
         });
 
