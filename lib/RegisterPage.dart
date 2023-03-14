@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
+import 'Home.dart';
 import 'LoginPage.dart';
+import 'Main.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -270,10 +272,12 @@ class RegisterPageState extends State<RegisterPage> {
                                       .then((value) {
                                     LoginPageState.informationInvalid = false;
                                     RegisterPageState.registerInformationInvalid = false;
+                                    MainPageState.loggedInUserKey = _emailController.text;
+                                    HomePageState.registeredForFirstTime = true;
                                     return Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => const LoginPage()));
+                                            builder: (context) => MainPage(pageId: 0)));
                                   });
                                 });
                               },

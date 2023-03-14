@@ -21,8 +21,9 @@ class HomePageState extends State<HomePage> {
   fbDb.DatabaseReference ref = fbDb.FirebaseDatabase.instance.ref("UserMedicine");
   // Firebase variables
 
+  static bool registeredForFirstTime = false;
 
-  String backgroundImage = "", title = "", userId = "", name = "";
+  String backgroundImage = "", title = "", userId = "", name = "", initialTextOne = "", initialTextTwo = "";
   // String variables for UI
 
   var userMedicines = [], drugNames = [], drugShortDescriptions = [],
@@ -38,14 +39,22 @@ class HomePageState extends State<HomePage> {
     // Query user by his/her e-mail
     // E-mail is can be considered as unique key
     // Primary key is ID @Egemen
+    var snapshot;
 
-    var snapshot = await firestore.collection("Med-Kit User").
-    where('email', isEqualTo: widget.loggedInUserKey).get();
-    setState(() {
-      name = snapshot.docs[0].get('userName');
-    });
-
-
+    while (true){
+      try{
+        snapshot = await firestore.collection("Med-Kit User").
+        where('email', isEqualTo: widget.loggedInUserKey).get();
+        setState(() {
+          name = snapshot.docs[0].get('userName');
+        });
+        break;
+      }
+      catch(error) // If user query fail @Egemen
+          {
+        continue;
+      }
+    }
     try {
 
         // If queried user has scanned drugs, we execute queries and
@@ -110,6 +119,7 @@ class HomePageState extends State<HomePage> {
         }
       catch(error) // If user query fail @Egemen
       {
+        isLoading = false;
         print("User query failed.");
       }
   }
@@ -142,6 +152,16 @@ class HomePageState extends State<HomePage> {
     {
       backgroundImage = "assets/images/night.jpg";
       title = "🌙 Good night, $name!";
+    }
+
+    if(registeredForFirstTime)
+      {
+        initialTextOne = "Welcome, $name! \n\nI've been prepared perfectly to help you!";
+        initialTextTwo = "You can navigate other pages to explore me.";
+      }
+    else{
+      initialTextOne = "Looks like you have not scanned\nany medicine yet, $name 🤭";
+      initialTextTwo = "Luckily, you have me!";
     }
   }
 
@@ -821,32 +841,32 @@ class HomePageState extends State<HomePage> {
                           Column(
                             children: [
                               SizedBox(
-                                  height: size.height * .125
+                                  height: size.height * .035
                               ),
                               Text(
-                                  "Looks like you have not scanned\nany medicine yet, $name 🤭",
+                                  initialTextOne,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 17)
                               ),
                               SizedBox(
-                                  height: size.height * .02
+                                  height: size.height * .05
                               ),
-                              const Text(
-                                  "Luckily, you have me!",
+                              Text(
+                                  initialTextTwo,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 17)
                               ),
                               SizedBox(
-                                  height: size.height * .02
+                                  height: size.height * .07
                               ),
                               Image.asset("assets/images/medkit_logo.png",
                                width: 90, height: 90),
                               SizedBox(
-                                  height: size.height * .04
+                                  height: size.height * .07
                               ),
                               ElevatedButton(
                                 onPressed: () {Navigator.push(
