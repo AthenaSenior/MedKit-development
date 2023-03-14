@@ -37,6 +37,7 @@ class MainPageState extends State<MainPage> {
     return WillPopScope(
       onWillPop: () async {
       setState(() {
+        widget.pageId = 0;
         hideBar = false;
       });
       return false;
