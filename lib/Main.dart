@@ -7,6 +7,10 @@ import 'Profile.dart';
 import 'Scan.dart';
 
 class MainPage extends StatefulWidget {
+  MainPage({super.key, required this.pageId});
+
+  int pageId;
+
   @override
   MainPageState createState() => MainPageState();
 }
@@ -16,7 +20,6 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
 
   static String loggedInUserKey = "";
-  int selectedPage = 0;
   bool canGoBack = false;
   var hideBar = false;
   final AuthService _authService = AuthService();
@@ -34,14 +37,13 @@ class MainPageState extends State<MainPage> {
     return WillPopScope(
       onWillPop: () async {
       setState(() {
-        selectedPage = 0;
         hideBar = false;
       });
       return false;
       },
     child: Scaffold(
         backgroundColor: Colors.white,
-        body: _pageOptions[selectedPage],
+        body: _pageOptions[widget.pageId],
        bottomNavigationBar: Visibility(
          visible: !hideBar,
          child:
@@ -69,16 +71,16 @@ class MainPageState extends State<MainPage> {
             label: 'Log Out',
           ),
         ],
-        currentIndex: selectedPage,
+        currentIndex: widget.pageId,
         selectedItemColor: Colors.blueAccent,
         onTap: (i){
-          setState(() {
-            selectedPage = i; // index
-            if(selectedPage == 2) {
+          setState(() {//
+            widget.pageId = i; // index
+            if(widget.pageId == 2) {
               hideBar = true;
               canGoBack = true;
             }
-            else if(selectedPage == 4){
+            else if(widget.pageId == 4){
               _authService.signOut();
               Navigator.push(
                   context,

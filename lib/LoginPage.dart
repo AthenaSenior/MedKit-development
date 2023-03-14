@@ -149,7 +149,7 @@ class LoginPageState extends State<LoginPage> {
                                 return Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MainPage()));
+                                        builder: (context) => MainPage(pageId: 0)));
                               });
                             });
                           },

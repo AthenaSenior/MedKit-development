@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:med_kit/Main.dart';
+import 'package:med_kit/service/auth.dart';
 
-class DrugDetail extends StatelessWidget {
-  DrugDetail({super.key, required this.drugName, required this.drugPicture, required this.drugLongDesc});
+class DrugDetail extends StatefulWidget {
+  const DrugDetail({super.key, required this.drugName, required this.drugPicture, required this.drugLongDesc});
+  final String drugName, drugPicture, drugLongDesc;
+  @override
+  State<DrugDetail> createState() => DrugDetailState();
+}
+
+class DrugDetailState extends State<DrugDetail> {
   // Constructor takes the attributes of drugs from scanner modal or main screen.
   // So, we do not have to query for second time. This will improve the performance of our app.
   // @Egemen
 
-  final String drugName, drugPicture, drugLongDesc;
+  final AuthService _authService = AuthService();
   String backgroundImage = "", title= "";
   //Variable initializations.
 
@@ -75,7 +83,7 @@ class DrugDetail extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .87,
+                  height: size.height * .80,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                     color: Colors.white70.withOpacity(.75),
@@ -87,7 +95,7 @@ class DrugDetail extends StatelessWidget {
                     Column(
                         children: [
                           Text(
-                              drugName,
+                              widget.drugName,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   color: Colors.black,
@@ -96,15 +104,15 @@ class DrugDetail extends StatelessWidget {
                           SizedBox(
                               height: size.height * .01
                           ),
-                          Image.network(drugPicture,
+                          Image.network(widget.drugPicture,
                               width: size.width * .55, height: size.height * .25),
                         SizedBox(
-                          height: size.height * .52,
+                          height: size.height * .465,
                           child:
                           SingleChildScrollView(
                             child:
                             Text(
-                                drugLongDesc,
+                                widget.drugLongDesc,
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     color: Colors.black,
@@ -121,6 +129,67 @@ class DrugDetail extends StatelessWidget {
           ],
           ),
         ),
+        bottomNavigationBar:
+    BottomNavigationBar(
+    type: BottomNavigationBarType.fixed,
+    items: const <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+    icon: Icon(Icons.home, color: Colors.grey),
+    label: 'Home',
+    ),
+    BottomNavigationBarItem(
+    icon: Icon(Icons.person, color: Colors.grey),
+    label: 'Profile',
+    ),
+    BottomNavigationBarItem(
+    icon: Icon(Icons.qr_code_scanner, color: Colors.grey),
+    label: 'Scan Drugs',
+    ),
+    BottomNavigationBarItem(
+    icon: Icon(Icons.question_answer, color: Colors.grey),
+    label: 'FAQ',
+    ),
+    BottomNavigationBarItem(
+    icon: Icon(Icons.logout, color: Colors.grey),
+    label: 'Log Out',
+    ),
+    ],
+    currentIndex: 0,
+    selectedItemColor: Colors.blueAccent,
+    onTap: (i){
+    setState(() {
+        if(i == 1) {
+          Navigator.push(
+              context,
+          MaterialPageRoute(
+              builder: (context) =>
+              MainPage(pageId: 1)));
+        }
+        else if(i == 2) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  MainPage(pageId: 2)));
+        }
+        else if(i == 3) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  MainPage(pageId: 3)));
+        }
+        else if(i == 4) {
+          _authService.signOut();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  MainPage(pageId: 4)));
+        }
+    });
+    },
+    ),
     );
   }
 }

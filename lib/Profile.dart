@@ -158,14 +158,14 @@ class ProfileState extends State<Profile> {
                           Row(
                             children:[
                               SizedBox(
-                                  width: size.width * .57
+                                  width: size.width * .53
                               ),
                                         Image.asset("assets/images/edit.png",
                                             width: 25, height: 25),
                                         TextButton(
                                           onPressed: () => {
                                           },
-                                          child: const Text('EDIT USER',
+                                          child: const Text('EDIT PROFILE',
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.black,
