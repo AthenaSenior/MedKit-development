@@ -30,7 +30,7 @@ class HomePageState extends State<HomePage> {
       drugPictures = [], drugLongDescriptions = [], drugVisibilities = [false, false, false, false, false, false];
   // Data storages
 
-  bool isScannedBefore = false, isLoading = true;
+  bool isScannedBefore = false, isLoading = true, lastFiveDrugsSectionActive = true;
   // State manager flag(s)
 
   Future<void> getLoggedInUserInfo()
@@ -96,6 +96,9 @@ class HomePageState extends State<HomePage> {
               // (This means user see nothing in
               // corresponding rows if they scanned less than five drugs) @Egemen
               setState(() {
+                if(i == 2) {
+                  lastFiveDrugsSectionActive = false;
+                }
               drugNames.add(' ');
               drugShortDescriptions.add(' ');
               drugPictures.add(' ');
@@ -348,7 +351,7 @@ class HomePageState extends State<HomePage> {
                 height: size.height * .01
             ),
           Visibility(
-            visible: isScannedBefore,
+            visible: isScannedBefore && lastFiveDrugsSectionActive,
                 child: Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
