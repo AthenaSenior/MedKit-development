@@ -19,8 +19,11 @@ class ProfileState extends State<Profile> {
   fbDb.DatabaseReference ref = fbDb.FirebaseDatabase.instance.ref("UserMedicine");
   // Firebase variables
 
+  List<String> list = <String>['Male', 'Female', 'Other'];
+  String dropdownValue = 'Male'; // by Default
+  IconData icon = Icons.male_rounded;
   int userMedicines = 0;
-  bool isLoading = true;
+  bool isLoading = true, isView = true, isEdit = false;
   String backgroundImage = "";
   String gender = "", userName = "", userNote = "", totalScannedDrugs = "0", registerDate = "null";
   // Variable initializations
@@ -106,6 +109,9 @@ class ProfileState extends State<Profile> {
             SizedBox(
                 height: size.height * .05
             ),
+            Visibility(
+              visible: isView,
+            child:
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -158,20 +164,29 @@ class ProfileState extends State<Profile> {
                           Row(
                             children:[
                               SizedBox(
-                                  width: size.width * .53
+                                  width: size.width * .50
                               ),
-                                        Image.asset("assets/images/edit.png",
-                                            width: 25, height: 25),
-                                        TextButton(
-                                          onPressed: () => {
-                                          },
-                                          child: const Text('EDIT PROFILE',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
+                              ElevatedButton.icon(
+                                onPressed: () => {
+                                  setState(() {
+                                    isView = false;
+                                    isEdit = true;
+                                  })
+                                },
+                                icon: const Icon( // <-- Icon
+                                  Icons.settings,
+                                  size: 24.0,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black, // Background color
+                                ),
+                                label: const Text('SETTINGS',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ), // <-- Text
+                              ),
                                       ]
                                     ),
                           SizedBox(
@@ -308,6 +323,540 @@ class ProfileState extends State<Profile> {
                   ),
                 ),
               ),
+            ),
+            ),
+
+            Visibility(
+              visible: isEdit,
+              child:
+              Center(
+                child: Column(
+                  children: [
+                    Row(
+                        children:[
+                          IconButton(
+                            onPressed: () => {
+                              setState(() {
+                                isView = true;
+                                isEdit = false;
+                              })
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios_outlined,
+                              color: Colors.black,
+                              size: 25,
+                            ),
+                          ),
+                          const Text(
+                              "Back to profile",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25)
+                          ),
+                        ]
+                    ),
+                    SizedBox(
+                        height: size.height * .02
+                    ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Container(
+                    height: size.height * .80,
+                    width: size.width * .95,
+                    decoration: BoxDecoration(
+                      color: Colors.white70.withOpacity(.75),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child:
+                      Column(
+                          children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                              children:[
+                                Image.asset("assets/images/settings2.png",
+                                    width: 25, height: 25),
+                                SizedBox(
+                                    width: size.width * .025
+                                ),
+                                const Text(
+                                    "Set Your Profile",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold)
+                                ),
+                              ]
+                            ),
+                            SizedBox(
+                                height: size.height * .025
+                            ),
+                            const Divider(
+                                color: Colors.black
+                            ),
+                            SizedBox(
+                                height: size.height * .015
+                            ),
+                          SizedBox(
+                          height: size.height * .65,
+                          child:
+                          SingleChildScrollView(
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                            child:
+                            Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                    "Your full name",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20)
+                                ),
+                                const Text(
+                                    "Change your full name any time you wish.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)
+                                ),
+                                SizedBox(
+                                    height: size.height * .03,
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                  children:[
+                                    SizedBox(
+                                        width: size.width * .40,
+                                        height: size.height * .06,
+                                        child:
+                                        const TextField(
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Full Name',
+                                          ),
+                                        )
+                                    ),
+                                    SizedBox(
+                                        width: size.width * .07,
+                                    ),
+                                    SizedBox(
+                                      width: size.width * .25,
+                                      height: size.height * .05,
+                                    child:
+                                    ElevatedButton.icon(
+                                      onPressed: () => {
+                                        setState(() {
+                                          // Save et.
+                                        })
+                                      },
+                                      icon: const Icon( // <-- Icon
+                                        Icons.save,
+                                        size: 24.0,
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black, // Background color
+                                      ),
+                                      label: const Text('Save',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ), // <-- Text
+                                    ),
+                                    )
+                                  ]
+                                ),
+                            const Divider(
+                              color: Colors.black
+                            ),
+                            SizedBox(
+                                height: size.height * .025
+                            ),
+                            Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                      "Your e-mail address",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20)
+                                  ),
+                                  const Text(
+                                      "Change your e-mail instantly.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)
+                                  ),
+                                  SizedBox(
+                                    height: size.height * .025,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children:[
+                                        SizedBox(
+                                            width: size.width * .40,
+                                            height: size.height * .06,
+                                            child:
+                                            const TextField(
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'E-mail Address',
+                                              ),
+                                            )
+                                        ),
+                                        SizedBox(
+                                          width: size.width * .07,
+                                        ),
+                                        SizedBox(
+                                          width: size.width * .25,
+                                          height: size.height * .05,
+                                          child:
+                                          ElevatedButton.icon(
+                                            onPressed: () => {
+                                              setState(() {
+                                                // Save et.
+                                              })
+                                            },
+                                            icon: const Icon( // <-- Icon
+                                              Icons.save,
+                                              size: 24.0,
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.black, // Background color
+                                            ),
+                                            label: const Text('Save',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ), // <-- Text
+                                          ),
+                                        )
+                                      ]
+                                  )
+
+                                ]
+                            ),
+                            SizedBox(
+                              height: size.height * .01,
+                            ),
+                            const Divider(
+                                color: Colors.black
+                            ),
+                            SizedBox(
+                                height: size.height * .01
+                            ),
+                            Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                      "Password",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20)
+                                  ),
+                                  const Text(
+                                      "Change your password in any time.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)
+                                  ),
+                                  SizedBox(
+                                    height: size.height * .02,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children:[
+                                        SizedBox(
+                                            width: size.width * .40,
+                                            height: size.height * .06,
+                                            child:
+                                            const TextField(
+                                              obscureText: true,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'Old Password',
+                                              ),
+                                            )
+                                        ),
+                                        SizedBox(
+                                          width: size.width * .07,
+                                        ),
+                                        SizedBox(
+                                          width: size.width * .25,
+                                          height: size.height * .05,
+                                        )
+                                      ]
+                                  ),
+                                  SizedBox(
+                                    height: size.height * .02,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children:[
+                                        SizedBox(
+                                            width: size.width * .40,
+                                            height: size.height * .06,
+                                            child:
+                                            const TextField(
+                                              obscureText: true,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'New Password',
+                                              ),
+                                            )
+                                        ),
+                                        SizedBox(
+                                          width: size.width * .07,
+                                        ),
+                                        SizedBox(
+                                          width: size.width * .25,
+                                          height: size.height * .05,
+                                          child:
+                                          ElevatedButton.icon(
+                                            onPressed: () => {
+                                              setState(() {
+                                                // Save et.
+                                              })
+                                            },
+                                            icon: const Icon( // <-- Icon
+                                              Icons.save,
+                                              size: 24.0,
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.black, // Background color
+                                            ),
+                                            label: const Text('Save',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ), // <-- Text
+                                          ),
+                                        )
+                                      ]
+                                  ),
+                                  SizedBox(
+                                    height: size.height * .01,
+                                  ),
+                                  const Divider(
+                                      color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                      height: size.height * .01
+                                  ),
+                                  Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const Text(
+                                            "Your gender:",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20)
+                                        ),
+                                        const Text(
+                                            "You can change your gender selection by this section.",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.blueGrey,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold)
+                                        ),
+                                        SizedBox(
+                                          height: size.height * .025,
+                                        ),
+                                        Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children:[
+                                              SizedBox(
+                                                  width: size.width * .18,
+                                                  height: size.height * .06,
+                                                  child:
+                                                  DropdownButton<String>(
+                                                    value: dropdownValue,
+                                                    icon: const Icon(Icons.arrow_downward),
+                                                    elevation: 14,
+                                                    style: const TextStyle(color: Colors.black),
+                                                    underline: Container(
+                                                      height: 3,
+                                                      width: 45,
+                                                      color: Colors.white60,
+                                                    ),
+                                                    onChanged: (String? value) {
+                                                      // This is called when the user selects an item.
+                                                      setState(() {
+                                                        dropdownValue = value!;
+                                                        if(dropdownValue == 'Male') {
+                                                          icon = Icons.male_rounded;
+                                                        } else {
+                                                          icon = Icons.female_rounded;
+                                                        }
+                                                      });
+                                                    },
+                                                    items: list.map<DropdownMenuItem<String>>((String value) {
+                                                      return DropdownMenuItem<String>(
+                                                        value: value,
+                                                        child: Text(value),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                              ),
+                                              SizedBox(
+                                                width: size.width * .07,
+                                              ),
+                                              Icon(
+                                                icon,
+                                                color: Colors.black,
+                                              ),
+                                              SizedBox(
+                                                width: size.width * .07,
+                                              ),
+                                              SizedBox(
+                                                width: size.width * .25,
+                                                height: size.height * .05,
+                                                child:
+                                                ElevatedButton.icon(
+                                                  onPressed: () => {
+                                                    setState(() {
+                                                      // Save et.
+                                                    })
+                                                  },
+                                                  icon: const Icon( // <-- Icon
+                                                    Icons.save,
+                                                    size: 24.0,
+                                                  ),
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: Colors.black, // Background color
+                                                  ),
+                                                  label: const Text('Save',
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.bold),
+                                                  ), // <-- Text
+                                                ),
+                                              )
+                                            ]
+                                        )
+
+                                      ]
+                                  ),
+                                  SizedBox(
+                                    height: size.height * .02,
+                                  ),
+                                ]
+                            ),
+                            const Divider(
+                                color: Colors.black
+                            ),
+                                SizedBox(
+                                    height: size.height * .01
+                                ),
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                          "Your notes",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20)
+                                      ),
+                                      const Text(
+                                          "Update your daily notes by this section.",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.blueGrey,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold)
+                                      ),
+                                      SizedBox(
+                                        height: size.height * .02,
+                                      ),
+                                      Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children:[
+                                            SizedBox(
+                                                width: size.width * .70,
+                                                height: size.height * .15,
+                                                child:
+                                                const TextField(
+                                                  keyboardType: TextInputType.multiline,
+                                                  maxLines: 4,
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(),
+                                                    labelText: 'Notes',
+                                                  ),
+                                                )
+                                            ),
+                                            SizedBox(
+                                              width: size.width * .25,
+                                              height: size.height * .05,
+                                              child:
+                                              ElevatedButton.icon(
+                                                onPressed: () => {
+                                                  setState(() {
+                                                    // Save et.
+                                                  })
+                                                },
+                                                icon: const Icon( // <-- Icon
+                                                  Icons.save,
+                                                  size: 24.0,
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.black, // Background color
+                                                ),
+                                                label: const Text('Save',
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold),
+                                                ), // <-- Text
+                                              ),
+                                            )
+                                          ]
+                                      )
+
+                                    ]
+                                ),
+                            ]
+                          ),
+                          ),
+                          )
+                          )
+                            ],
+                  ),
+                 ),
+                  ),
+                ),
+              ],
+              ),
+            ),
             ),
           ],
           ),

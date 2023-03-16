@@ -22,7 +22,7 @@ class RegisterPageState extends State<RegisterPage> {
   bool _listTileCheckBox = false;
   final AuthService _authService = AuthService();
   // Variables for register
-  List<String> list = <String>['Male', 'Female'];
+  List<String> list = <String>['Male', 'Female', 'Other'];
 
   String dropdownValue = 'Male'; // by Default
 

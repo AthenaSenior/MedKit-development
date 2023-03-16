@@ -43,6 +43,7 @@ class MainPageState extends State<MainPage> {
       return false;
       },
     child: Scaffold(
+      resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: _pageOptions[widget.pageId],
        bottomNavigationBar: Visibility(
