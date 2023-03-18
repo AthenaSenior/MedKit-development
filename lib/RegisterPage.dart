@@ -330,15 +330,20 @@ class RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     SizedBox(
-                      width: size.width * 0.23,
+                      width: size.width * 0.075,
                     ),
                     Text(
-                      "Register",
+                      "Join to the Med-Kit!",
                       style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.blueAccent.withOpacity(.75),
+                          fontSize: 24,
+                          color: Colors.blueGrey.withOpacity(.65),
                           fontWeight: FontWeight.bold),
-                    )
+                    ),
+                    SizedBox(
+                      width: size.width * 0.03,
+                    ),
+                    Image.asset("assets/images/medkit_logo.png",
+                        width: 55, height: 55),
                   ],
                 ),
               ),
