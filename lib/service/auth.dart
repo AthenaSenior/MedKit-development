@@ -4,6 +4,7 @@ import 'package:med_kit/LoginPage.dart';
 import 'package:med_kit/RegisterPage.dart';
 import 'package:intl/intl.dart';
 import '../Main.dart';
+import '../Profile.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,6 +24,42 @@ class AuthService {
       return user.user;
     }
     return user.user;
+  }
+
+  updateUserAuthInformationEmail(String email) async {
+    try{
+      final update = await FirebaseAuth.instance.currentUser!.updateEmail(email);
+      ProfileState.error = false;
+      return update;
+    }
+    catch(error) {
+      ProfileState.error = true;
+      ProfileState.errorMessage = error.toString();
+    }
+  }
+
+  changePassword(String currentPassword, String newPassword) async {
+
+    if(newPassword.length < 6)
+    {
+      ProfileState.error = true;
+      ProfileState.errorMessage = "Password length should not be less than 6 characters.";
+      return;
+    }
+
+    try{
+      //Create an instance of the current user.
+      var user = await _auth.currentUser!;
+      final cred = await _auth.signInWithEmailAndPassword(
+          email: user.email!, password: currentPassword); // Try to login
+      var x = await user.updatePassword(newPassword); // If successfully login, it means old pass is true. So set the password as new
+      ProfileState.error = false;
+      return cred;
+    }
+    catch(error) {
+     ProfileState.error = true;
+     ProfileState.errorMessage = "Current password is invalid.";
+    }
   }
 
   // Sign out function

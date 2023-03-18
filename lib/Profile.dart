@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart' as fbDb;
+import 'package:med_kit/Main.dart';
+import 'package:med_kit/service/auth.dart';
 import 'Loader.dart';
+import 'LoginPage.dart';
 
 class Profile extends StatefulWidget {
   Profile({super.key, required this.loggedInUserKey});
@@ -17,15 +20,27 @@ class ProfileState extends State<Profile> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final fbDb.FirebaseDatabase database = fbDb.FirebaseDatabase.instance;
   fbDb.DatabaseReference ref = fbDb.FirebaseDatabase.instance.ref("UserMedicine");
+  CollectionReference users = FirebaseFirestore.instance.collection('Med-Kit User');
+  final AuthService _authService = AuthService();
   // Firebase variables
 
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final oldPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final notesController = TextEditingController();
+  // Text Controllers for edit profile section to save data
+
   List<String> list = <String>['Male', 'Female', 'Other'];
-  String dropdownValue = 'Male'; // by Default
-  IconData icon = Icons.male_rounded;
+  String dropdownValue = '';
+  late IconData icon;
   int userMedicines = 0;
   bool isLoading = true, isView = true, isEdit = false;
+  static bool error = false;
+  static String errorMessage = "";
   String backgroundImage = "";
-  String gender = "", userName = "", userNote = "", totalScannedDrugs = "0", registerDate = "null";
+  String userDocumentUID = "", gender = "", userName = "", userNote = "", totalScannedDrugs = "0", registerDate = "null";
+  String userPicture = "";
   // Variable initializations
 
   Future<void> getLoggedInUserProfileInfo()
@@ -45,22 +60,50 @@ class ProfileState extends State<Profile> {
       userMedicines++;
     }
     setState(() {
+      userDocumentUID = snapshot.docs[0].reference.id; // We will use this document id to update profile
       userName = snapshot.docs[0].get('userName');
       userNote = snapshot.docs[0].get('note');
       registerDate = snapshot.docs[0].get('date');
       gender = snapshot.docs[0].get('gender');
       totalScannedDrugs = userMedicines.toString();
-      if(userNote == '')
+      nameController.text = userName;
+      emailController.text =  snapshot.docs[0].get('email');
+      dropdownValue = gender;
+      notesController.text = userNote;
+
+      // Set values
+
+      if(userNote == '') // Set default user note if no note
         {
           userNote = "\n\nYou have no notes yet. Add some to remind yourself daily!";
         }
+      switch(gender) // Set user pic
+      {
+        case "Male":
+          {
+            userPicture = "assets/images/maleUser.png";
+            icon = Icons.male_rounded;
+            break;
+          }
+        case "Female":
+          {
+            userPicture = "assets/images/femaleUser.png";
+            icon = Icons.female_rounded;
+            break;
+          }
+        default:
+          {
+            userPicture = "assets/images/otherGenderUser.png";
+            icon = Icons.transgender_rounded;
+            break;
+          }
+      }
       isLoading = false;
     });
     }
 
   @override
   void initState() {
-    super.initState();
     getLoggedInUserProfileInfo();
     // Execute the function as initial state @Egemen
   }
@@ -84,6 +127,74 @@ class ProfileState extends State<Profile> {
     {
       backgroundImage = "assets/images/night.jpg";
     }
+  }
+
+  Future<void> _showUserDataUpdateSuccessfulDialog(bool isAuthChange) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Operation Successful'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Your information has successfully updated.\n'),
+                Text(isAuthChange ? 'E-mail or password changes requires re-login. You will be redirected to the login page.' : ''),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Done'),
+              onPressed: () {
+                if(!isAuthChange) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => MainPage(pageId: 1)));
+                }
+                else{
+                  _authService.signOut();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()));
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showUserDataUpdateFailureDialog(String errorMessage) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Operation Failed'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Your request could not be processed due below error.\n'),
+                Text(errorMessage),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Done'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -132,7 +243,7 @@ class ProfileState extends State<Profile> {
                           child:
                           Row(
                             children:[
-                              Image.asset(gender == "Male" ? "assets/images/maleUser.png" : "assets/images/femaleUser.png",
+                              Image.asset(userPicture,
                                   width: 120, height: 120),
                               SizedBox(
                                   width: size.width * .08
@@ -438,8 +549,9 @@ class ProfileState extends State<Profile> {
                                         width: size.width * .40,
                                         height: size.height * .06,
                                         child:
-                                        const TextField(
-                                          decoration: InputDecoration(
+                                        TextField(
+                                          controller: nameController,
+                                          decoration: const InputDecoration(
                                             border: OutlineInputBorder(),
                                             labelText: 'Full Name',
                                           ),
@@ -455,9 +567,22 @@ class ProfileState extends State<Profile> {
                                     ElevatedButton.icon(
                                       onPressed: () => {
                                         setState(() {
-                                          // Save et.
-                                        })
-                                      },
+                                          if(nameController.text.isEmpty)
+                                            {
+                                              _showUserDataUpdateFailureDialog("Name should not be empty.");
+                                            }
+                                          else if(nameController.text.length < 7)
+                                            {
+                                              _showUserDataUpdateFailureDialog("Name length should be more than 6 characters.");
+                                            }
+                                          else{
+                                          users.doc(userDocumentUID)
+                                              .update({'userName': nameController.text})
+                                              .then((value) =>
+                                              _showUserDataUpdateSuccessfulDialog(false));
+                                            }
+                                          })
+                                        },
                                       icon: const Icon( // <-- Icon
                                         Icons.save,
                                         size: 24.0,
@@ -509,10 +634,11 @@ class ProfileState extends State<Profile> {
                                       children:[
                                         SizedBox(
                                             width: size.width * .40,
-                                            height: size.height * .06,
+                                            height: size.height * .065,
                                             child:
-                                            const TextField(
-                                              decoration: InputDecoration(
+                                            TextField(
+                                              controller: emailController,
+                                              decoration: const InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 labelText: 'E-mail Address',
                                               ),
@@ -528,8 +654,21 @@ class ProfileState extends State<Profile> {
                                           ElevatedButton.icon(
                                             onPressed: () => {
                                               setState(() {
-                                                // Save et.
-                                              })
+                                                _authService
+                                                    .updateUserAuthInformationEmail(
+                                                    emailController.text).then((value) {
+                                                  if(!error)
+                                                  {
+                                                    users.doc(userDocumentUID)
+                                                        .update({'email': emailController.text})
+                                                        .then((value) =>
+                                                        _showUserDataUpdateSuccessfulDialog(true));
+                                                  }
+                                                  else{
+                                                    return _showUserDataUpdateFailureDialog(errorMessage);
+                                                  }
+                                                });
+                                              }),
                                             },
                                             icon: const Icon( // <-- Icon
                                               Icons.save,
@@ -590,9 +729,10 @@ class ProfileState extends State<Profile> {
                                             width: size.width * .40,
                                             height: size.height * .06,
                                             child:
-                                            const TextField(
+                                            TextField(
+                                              controller: oldPasswordController,
                                               obscureText: true,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 labelText: 'Old Password',
                                               ),
@@ -618,9 +758,10 @@ class ProfileState extends State<Profile> {
                                             width: size.width * .40,
                                             height: size.height * .06,
                                             child:
-                                            const TextField(
+                                            TextField(
+                                              controller: newPasswordController,
                                               obscureText: true,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 labelText: 'New Password',
                                               ),
@@ -636,8 +777,18 @@ class ProfileState extends State<Profile> {
                                           ElevatedButton.icon(
                                             onPressed: () => {
                                               setState(() {
-                                                // Save et.
-                                              })
+                                                _authService
+                                                    .changePassword(
+                                                    oldPasswordController.text, newPasswordController.text).then((value) {
+                                                      if(!error)
+                                                        {
+                                                          return _showUserDataUpdateSuccessfulDialog(true);
+                                                        }
+                                                      else{
+                                                        return _showUserDataUpdateFailureDialog(errorMessage);
+                                                      }
+                                                });
+                                              }),
                                             },
                                             icon: const Icon( // <-- Icon
                                               Icons.save,
@@ -711,8 +862,11 @@ class ProfileState extends State<Profile> {
                                                         dropdownValue = value!;
                                                         if(dropdownValue == 'Male') {
                                                           icon = Icons.male_rounded;
-                                                        } else {
+                                                        } else if(dropdownValue == 'Female'){
                                                           icon = Icons.female_rounded;
+                                                        }
+                                                        else{
+                                                          icon = Icons.transgender_rounded;
                                                         }
                                                       });
                                                     },
@@ -741,7 +895,10 @@ class ProfileState extends State<Profile> {
                                                 ElevatedButton.icon(
                                                   onPressed: () => {
                                                     setState(() {
-                                                      // Save et.
+                                                      users.doc(userDocumentUID)
+                                                          .update({'gender': dropdownValue})
+                                                          .then((value) => _showUserDataUpdateSuccessfulDialog(false))
+                                                          .catchError((error) => _showUserDataUpdateFailureDialog(error));
                                                     })
                                                   },
                                                   icon: const Icon( // <-- Icon
@@ -805,10 +962,11 @@ class ProfileState extends State<Profile> {
                                                 width: size.width * .70,
                                                 height: size.height * .15,
                                                 child:
-                                                const TextField(
+                                                TextField(
+                                                  controller: notesController,
                                                   keyboardType: TextInputType.multiline,
                                                   maxLines: 4,
-                                                  decoration: InputDecoration(
+                                                  decoration: const InputDecoration(
                                                     border: OutlineInputBorder(),
                                                     labelText: 'Notes',
                                                   ),
@@ -821,7 +979,10 @@ class ProfileState extends State<Profile> {
                                               ElevatedButton.icon(
                                                 onPressed: () => {
                                                   setState(() {
-                                                    // Save et.
+                                                    users.doc(userDocumentUID)
+                                                        .update({'note': notesController.text})
+                                                        .then((value) => _showUserDataUpdateSuccessfulDialog(false))
+                                                        .catchError((error) => _showUserDataUpdateFailureDialog(error));
                                                   })
                                                 },
                                                 icon: const Icon( // <-- Icon

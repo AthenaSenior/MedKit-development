@@ -107,7 +107,6 @@ class HomePageState extends State<HomePage> {
               });
             }
           }
-          print(drugNames);
         }
 
         else{ // If user scanned no drugs, then no drugs will be queried. @Egemen

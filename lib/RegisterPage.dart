@@ -205,10 +205,14 @@ class RegisterPageState extends State<RegisterPage> {
                                     // This is called when the user selects an item.
                                     setState(() {
                                       dropdownValue = value!;
-                                      if(dropdownValue == 'Male')
+                                      if(dropdownValue == 'Male') {
                                         icon = Icons.male_rounded;
-                                      else
+                                      } else if(dropdownValue == 'Female'){
                                         icon = Icons.female_rounded;
+                                      }
+                                      else{
+                                        icon = Icons.transgender_rounded;
+                                      }
                                     });
                                   },
                                   items: list.map<DropdownMenuItem<String>>((String value) {
