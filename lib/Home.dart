@@ -355,7 +355,7 @@ class HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .495,
+                  height: size.height * .525,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                     color: Colors.white70.withOpacity(.85),
@@ -373,13 +373,17 @@ class HomePageState extends State<HomePage> {
                             const Text(
                                 "Last Five Medicines",
                                 style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 26)
-                            )
+                                    color: Colors.blueGrey,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold)
+                            ),
                           ],
                         ),
                         SizedBox(
-                            height: size.height * .02
+                            height: size.height * .03
+                        ),
+                        const Divider(
+                            color: Colors.black
                         ),
                   SizedBox(
                      height: size.height * .408,

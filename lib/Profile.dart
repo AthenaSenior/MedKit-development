@@ -821,7 +821,7 @@ class ProfileState extends State<Profile> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         const Text(
-                                            "Your gender:",
+                                            "Your gender",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,

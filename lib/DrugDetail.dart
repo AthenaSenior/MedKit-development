@@ -105,9 +105,12 @@ class DrugDetailState extends State<DrugDetail> {
                               height: size.height * .01
                           ),
                           Image.network(widget.drugPicture,
-                              width: size.width * .55, height: size.height * .25),
-                        SizedBox(
-                          height: size.height * .465,
+                              width: size.width * .55, height: size.height * .24),
+                        const Divider(
+                          color: Colors.black
+                        ),
+                          SizedBox(
+                          height: size.height * .445,
                           child:
                           SingleChildScrollView(
                             child:
