@@ -16,6 +16,9 @@ dependencies:
 
 
   cupertino_icons: ^1.0.2
+  camera: ^0.10.3+2
+  google_mlkit_text_recognition: ^0.5.0
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

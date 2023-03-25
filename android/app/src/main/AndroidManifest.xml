@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.med_kit">
+    
+    <uses-permission android:name="android.permission.CAMERA"/>
+    
    <application
         android:label="med_kit"
         android:name="${applicationName}"
