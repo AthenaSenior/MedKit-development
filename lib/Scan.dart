@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'DrugDetail.dart';
+import 'Loader.dart';
 
 class Scan extends StatefulWidget {
   const Scan({super.key});
@@ -13,19 +16,34 @@ class Scan extends StatefulWidget {
 
 class _ScanState extends State<Scan> with WidgetsBindingObserver{
   bool _isPermissionGranted = false;
-
   late final Future<void> _future;
-
   CameraController? _cameraController;
-
   final _textRecognizer = TextRecognizer();
+  final FirebaseDatabase database = FirebaseDatabase.instance;
+  DatabaseReference ref = FirebaseDatabase.instance.ref("Drugs");
+  List<String> drugs = [];
+  bool isLoading = true;
+
+  Future<void> getAllDrugs()
+  async {
+
+    Query query = ref.orderByChild("Name");
+    DataSnapshot event = await query.get();
+
+    for (var child in event.children) {
+      drugs.add(child.child("Name").value.toString());
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   void initState(){
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
     _future = _requestCameraPermission();
+    getAllDrugs();
   }
   @override
   void dispose() {
@@ -54,7 +72,11 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
     return FutureBuilder(
         future: _future,
         builder: (context, snapshot) {
-          return Container(
+          return isLoading ? const Scaffold(
+            body: Loader(),
+          )
+              :
+          Container(
             height: size.width * 2.2,
             width: size.height * 2.2,
             color: Colors.black,
@@ -186,8 +208,6 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
   Future<void> _scanImage() async {
     if (_cameraController == null) return;
 
-    final navigator = Navigator.of(context);
-
     try {
       final pictureFile = await _cameraController!.takePicture();
 
@@ -195,8 +215,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
 
       final inputImage = InputImage.fromFile(file);
       final recognizedText = await _textRecognizer.processImage(inputImage);
-
-      _showResultModal(recognizedText.text);
+      _queryText(recognizedText.text);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -206,25 +225,107 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
     }
   }
 
-  Future<void> _showResultModal(String scannedText) async {
+  Future<void> _queryText(String scannedText)
+  async {
+    String scannedDrugName = "", scannedDrugShortDesc = "", scannedDrugLongDesc = "", scannedDrugPictureUrl = "";
+    int scannedDrugId;
+    final splittedScans = scannedText.split(' ');
+
+    for(var word in splittedScans) // little bit complex nested for
+    {
+      for (var item in drugs) {
+        if(item.contains(word)){
+          scannedDrugName = item;
+        }
+      }
+    }
+
+    try{
+      Query query = ref.orderByChild("Name").equalTo(scannedDrugName);
+      DataSnapshot event = await query.get();
+
+      if(event.exists)
+      {
+        setState(() {
+          var data = Map<String, dynamic>.from(event.value as Map);
+          scannedDrugId = int.parse(data.keys.first);
+          scannedDrugShortDesc = data.values.first["ShortDesc"];
+          scannedDrugPictureUrl = data.values.first["PictureUrl"];
+          scannedDrugLongDesc = data.values.first["LongDesc"];
+          _showResultModal(scannedDrugName, scannedDrugShortDesc, scannedDrugPictureUrl, scannedDrugLongDesc);
+        });
+      }
+    }
+    catch(error) {
+      _showErrorModal();
+    }
+
+  }
+
+  Future<void> _showResultModal(String name, String short, String pic, String long) async {
+    var size = MediaQuery.of(context).size;
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Your Scan Result'),
+          title: Text(name),
+          content: Container(
+            color: Colors.white, // Dialog background
+            width: size.width, // Dialog width
+            height: 250, // Dialog height
+            child: SingleChildScrollView(
+              child: Column(
+                  children: [
+                        Text(
+                            short.replaceAll("<", "\n"),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14)
+                        ),
+                      Image.network(pic,
+                          width: 200, height: 200),
+                  ]
+              ),
+            ),
+        ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Detail >>'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            DrugDetail(drugName: name, drugPicture: pic, drugLongDesc: long)));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showErrorModal() async {
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Sorry!"),
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
-                Text(scannedText),
+              children: const <Widget>[
+                Text("I cannot handle your request. It happens when I do not have the data of the medicine or you cannot show the name properly to the screen."),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Done'),
+              child: const Text('Okay!'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
             ),
           ],
