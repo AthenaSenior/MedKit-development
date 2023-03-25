@@ -57,24 +57,109 @@ class FAQ extends StatelessWidget {
                       color: Colors.white70.withOpacity(.75),
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child:
-                      Column(
-                          children: [
-                            const Text(
-                                "FAQ", // Aleyna will fill here with FAQ text prepared by her.
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 17)
-                            ),
-                            SizedBox(
-                                height: size.height * .02
-                            ),
-                            /* Image.asset("assets/images/medkit_logo.png",
-                                width: 90, height: 90), */
-                          ]
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child:
+                        Column(
+                            children: [
+                              const Text(
+                                  "\n What is a MedKit application?",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "MedKit application allows users to take pictures of medication using their smartphone's camera, then recognize the medication and provide information about it.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "\n Can a MedKit application be used to identify all types of medication?",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "MedKit may not be able to identify all types of medication. Some medication may not be included in the app's database, and the app may not be able to identify medications with similar appearances.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "\n What is Opposite Drag Warning?",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "Opposite drag warning gives a warning for medicines that should not be used together.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "\n Where can I find my scanned medicines?",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "The scanned medicines can be accessed from the profile tab.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "\n Is a MedKit application a substitute for consulting a healthcare professional?",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "No, MedKit should not be used as a substitute for consulting a healthcare professional. It is always important to consult with a doctor or pharmacist before taking any new medication.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "\n Are there any risks associated with using a MedKit?",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17)
+                              ),
+                              const Text(
+                                  "There may be some risks associated with using a medicine recognition application, such as the app providing inaccurate information or identifying a medication incorrectly. It is important to verify any information provided by the app with a healthcare professional.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17)
+                              ),
+                              SizedBox(
+                                  height: size.height * .02
+                              ),
+                              /* Image.asset("assets/images/medkit_logo.png",
+                                  width: 90, height: 90), */
+                            ]
+                        ),
                       ),
                     ),
                   ),
