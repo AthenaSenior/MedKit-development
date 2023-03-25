@@ -238,7 +238,11 @@ class HomePageState extends State<HomePage> {
                       color: Colors.white70.withOpacity(.75),
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                      ),
-                  child: Padding(
+                  child:  SizedBox(
+                    height: size.height * .30,
+                    child:
+                    SingleChildScrollView(
+                    child: Padding(
                     padding: const EdgeInsets.all(14.0),
                       child: Column(
                         children: [
@@ -251,7 +255,7 @@ class HomePageState extends State<HomePage> {
                               "My Last Scan",
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 26)
+                                  fontSize: 24)
                           )
                               ],
                           ),
@@ -309,11 +313,8 @@ class HomePageState extends State<HomePage> {
                                             ],
                                             ),
                                             Image.network(drugPictures.isNotEmpty ? drugPictures[0] : 'No Medicine',
-                                                width: 130, height: 120),
+                                                width: 110, height: 110),
                                             ],
-                                ),
-                                SizedBox(
-                                    height: size.height * .0050
                                 ),
                                 Align(
                                     alignment: Alignment.centerRight,
@@ -346,6 +347,8 @@ class HomePageState extends State<HomePage> {
               ),
             ),
             ),
+              ),
+            ),
             SizedBox(
                 height: size.height * .01
             ),
@@ -355,7 +358,7 @@ class HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .525,
+                  height: size.height * .50,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                     color: Colors.white70.withOpacity(.85),
@@ -386,7 +389,7 @@ class HomePageState extends State<HomePage> {
                             color: Colors.black
                         ),
                   SizedBox(
-                     height: size.height * .408,
+                     height: size.height * .3710,
                     child:
                   SingleChildScrollView(
                     child:

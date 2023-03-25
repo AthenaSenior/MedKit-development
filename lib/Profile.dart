@@ -236,6 +236,11 @@ class ProfileState extends State<Profile> {
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
                     child:
+                    SizedBox(
+                      height: size.height * .444,
+                      child:
+                      SingleChildScrollView(
+                        child:
                     Column(
                         children: [
                           SizedBox(
@@ -275,7 +280,7 @@ class ProfileState extends State<Profile> {
                           Row(
                             children:[
                               SizedBox(
-                                  width: size.width * .50
+                                  width: size.width * .45
                               ),
                               ElevatedButton.icon(
                                 onPressed: () => {
@@ -436,7 +441,8 @@ class ProfileState extends State<Profile> {
               ),
             ),
             ),
-
+    )
+    ),
             Visibility(
               visible: isEdit,
               child:
@@ -473,7 +479,7 @@ class ProfileState extends State<Profile> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Container(
-                    height: size.height * .80,
+                    height: size.height * .78,
                     width: size.width * .95,
                     decoration: BoxDecoration(
                       color: Colors.white70.withOpacity(.75),
@@ -513,7 +519,7 @@ class ProfileState extends State<Profile> {
                                 height: size.height * .015
                             ),
                           SizedBox(
-                          height: size.height * .65,
+                          height: size.height * .64,
                           child:
                           SingleChildScrollView(
                             child: Padding(
@@ -561,7 +567,7 @@ class ProfileState extends State<Profile> {
                                         width: size.width * .07,
                                     ),
                                     SizedBox(
-                                      width: size.width * .25,
+                                      width: size.width * .28,
                                       height: size.height * .05,
                                     child:
                                     ElevatedButton.icon(
@@ -634,7 +640,7 @@ class ProfileState extends State<Profile> {
                                       children:[
                                         SizedBox(
                                             width: size.width * .40,
-                                            height: size.height * .065,
+                                            height: size.height * .075,
                                             child:
                                             TextField(
                                               controller: emailController,
@@ -648,7 +654,7 @@ class ProfileState extends State<Profile> {
                                           width: size.width * .07,
                                         ),
                                         SizedBox(
-                                          width: size.width * .25,
+                                          width: size.width * .28,
                                           height: size.height * .05,
                                           child:
                                           ElevatedButton.icon(
@@ -771,7 +777,7 @@ class ProfileState extends State<Profile> {
                                           width: size.width * .07,
                                         ),
                                         SizedBox(
-                                          width: size.width * .25,
+                                          width: size.width * .28,
                                           height: size.height * .05,
                                           child:
                                           ElevatedButton.icon(
@@ -843,7 +849,7 @@ class ProfileState extends State<Profile> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children:[
                                               SizedBox(
-                                                  width: size.width * .18,
+                                                  width: size.width * .2,
                                                   height: size.height * .06,
                                                   child:
                                                   DropdownButton<String>(
@@ -889,7 +895,7 @@ class ProfileState extends State<Profile> {
                                                 width: size.width * .07,
                                               ),
                                               SizedBox(
-                                                width: size.width * .25,
+                                                width: size.width * .28,
                                                 height: size.height * .05,
                                                 child:
                                                 ElevatedButton.icon(
@@ -973,7 +979,10 @@ class ProfileState extends State<Profile> {
                                                 )
                                             ),
                                             SizedBox(
-                                              width: size.width * .25,
+                                              height: size.height * .02,
+                                            ),
+                                            SizedBox(
+                                              width: size.width * .28,
                                               height: size.height * .05,
                                               child:
                                               ElevatedButton.icon(

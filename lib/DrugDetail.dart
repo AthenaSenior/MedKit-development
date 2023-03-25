@@ -110,7 +110,7 @@ class DrugDetailState extends State<DrugDetail> {
                           color: Colors.black
                         ),
                           SizedBox(
-                          height: size.height * .445,
+                          height: size.height * .444,
                           child:
                           SingleChildScrollView(
                             child:

@@ -1,43 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-
 import 'package:camera/camera.dart';
-import 'package:med_kit/ResultScreen.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
-
-
-
-
-
-
-class Scan extends StatelessWidget {
+class Scan extends StatefulWidget {
   const Scan({super.key});
-
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Medkit Text Recognation',
-      theme: ThemeData(
-
-        primarySwatch: Colors.blue,
-      ),
-      home: const MainScreen(),
-    );
-  }
-}
-
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-  @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<Scan> createState() => _ScanState();
 
 }
 
-class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
+class _ScanState extends State<Scan> with WidgetsBindingObserver{
   bool _isPermissionGranted = false;
 
   late final Future<void> _future;
@@ -76,10 +50,15 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
 
   @override
   Widget build(BuildContext context){
+    var size = MediaQuery.of(context).size;
     return FutureBuilder(
         future: _future,
         builder: (context, snapshot) {
-          return Stack(
+          return Container(
+            height: size.width * 2.2,
+            width: size.height * 2.2,
+            color: Colors.black,
+              child: Stack(
             children: [
               if (_isPermissionGranted)
                 FutureBuilder<List<CameraDescription>>(
@@ -87,37 +66,55 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
                   builder: (context, snapshot){
                     if(snapshot.hasData){
                       _initCameraController(snapshot.data!);
-
-                      return Center(child: CameraPreview(_cameraController!));
+                          return Column(
+                            children:[
+                              SizedBox(
+                                  height: size.height * 0.035
+                              ),
+                              Row(
+                                  children:[
+                                    Image.asset('assets/images/medicine.png',
+                                        width: 50, height: 50),
+                                    const SizedBox(
+                                        width: 10
+                                    ),
+                                    const Text("Make sure that the name of your medicine is \nfully visible on the screen.",
+                                      style: TextStyle(fontSize: 15, color: Colors.white),
+                                    ),
+                                  ]
+                              ),
+                              Center(child: CameraPreview(_cameraController!))
+                            ]
+                          );
                     } else {
                       return const LinearProgressIndicator();
                     }
                   } ,
                 ),
               Scaffold(
-                appBar: AppBar(
-                  title: const Text("Text Recognition Samplee"),
-                ),
                 backgroundColor: _isPermissionGranted ? Colors.transparent : null,
                 body: _isPermissionGranted
-
                     ? Column(
                   children: [
                     Expanded(
                       child: Container(),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(bottom: 30.0),
-                      child:  Center(
+                      padding: const EdgeInsets.only(bottom: 70.0),
                         child:ElevatedButton(
                           onPressed: _scanImage,
-                          child: const Text("Scan Text"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              )
+                          ),
+                          child: Image.asset('assets/images/medkit_logo.png',
+                              width: 100, height: 100),
                         ) ,
-                      ),
                     )
                   ],
                 )
-
                     : Center(
                   child: Container(
                     padding: const EdgeInsets.only(left: 24.0, right: 24.0,),
@@ -126,9 +123,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
                     ),
                   ),
                 ),
-              )
+              ),
             ],
-          );
+          ));
         });
 
   }
@@ -199,11 +196,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
       final inputImage = InputImage.fromFile(file);
       final recognizedText = await _textRecognizer.processImage(inputImage);
 
-      await navigator.push(
-        MaterialPageRoute(
-          builder: (BuildContext context) => ResultScreen(text: recognizedText.text),
-        ),
-      );
+      _showResultModal(recognizedText.text);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -211,6 +204,33 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
         ),
       );
     }
+  }
+
+  Future<void> _showResultModal(String scannedText) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Your Scan Result'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(scannedText),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Done'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
