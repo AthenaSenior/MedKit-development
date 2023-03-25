@@ -228,7 +228,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
   Future<void> _queryText(String scannedText)
   async {
     String scannedDrugName = "", scannedDrugShortDesc = "", scannedDrugLongDesc = "", scannedDrugPictureUrl = "";
-    int scannedDrugId;
+    int scannedDrugId = 0;
     final splittedScans = scannedText.split(' ');
 
     for(var word in splittedScans) // little bit complex nested for
