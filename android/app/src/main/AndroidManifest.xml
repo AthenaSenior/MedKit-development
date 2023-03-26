@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     
    <application
-        android:label="med_kit"
+        android:label="MedKit"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
