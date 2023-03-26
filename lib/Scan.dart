@@ -247,14 +247,12 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
 
       if(event.exists)
       {
-        print("aa");
         setState(() {
           var data = Map<String, dynamic>.from(event.value as Map);
           scannedDrugId = data.keys.first;
           scannedDrugShortDesc = data.values.first["ShortDesc"];
           scannedDrugPictureUrl = data.values.first["PictureUrl"];
           scannedDrugLongDesc = data.values.first["LongDesc"];
-          print(data);
           _getScannedDataAndAddNew(scannedDrugId);
           _showResultModal(scannedDrugName, scannedDrugShortDesc, scannedDrugPictureUrl, scannedDrugLongDesc);
         });

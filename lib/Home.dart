@@ -49,7 +49,6 @@ class HomePageState extends State<HomePage> {
         setState(() {
           name = snapshot.docs[0].get('userName');
           userId = snapshot.docs[0].get("ID");
-          print(userId);
         });
         break;
       }
