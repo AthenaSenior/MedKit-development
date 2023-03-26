@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:med_kit/Home.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'DrugDetail.dart';
@@ -227,8 +228,8 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
 
   Future<void> _queryText(String scannedText)
   async {
-    String scannedDrugName = "", scannedDrugShortDesc = "", scannedDrugLongDesc = "", scannedDrugPictureUrl = "";
-    int scannedDrugId = 0;
+    String scannedDrugName = "", scannedDrugShortDesc = "", scannedDrugLongDesc = "", scannedDrugPictureUrl = "", scannedDrugId = "";
+
     final splittedScans = scannedText.split(' ');
 
     for(var word in splittedScans) // little bit complex nested for
@@ -246,12 +247,15 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
 
       if(event.exists)
       {
+        print("aa");
         setState(() {
           var data = Map<String, dynamic>.from(event.value as Map);
-          scannedDrugId = int.parse(data.keys.first);
+          scannedDrugId = data.keys.first;
           scannedDrugShortDesc = data.values.first["ShortDesc"];
           scannedDrugPictureUrl = data.values.first["PictureUrl"];
           scannedDrugLongDesc = data.values.first["LongDesc"];
+          print(data);
+          _getScannedDataAndAddNew(scannedDrugId);
           _showResultModal(scannedDrugName, scannedDrugShortDesc, scannedDrugPictureUrl, scannedDrugLongDesc);
         });
       }
@@ -259,6 +263,41 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
     catch(error) {
       _showErrorModal();
     }
+
+  }
+
+  Future<void> _getScannedDataAndAddNew(String key) async
+  {
+    int counter = 0;
+    var drugs = [];
+    ref = FirebaseDatabase.instance.ref("UserMedicine");
+    Query query = ref.orderByChild("ScannedDrugId");
+    DataSnapshot event = await query.get();
+
+    for (var child in event.children) {
+      counter++;
+    }
+
+    query = ref.orderByChild("UserId").equalTo(HomePageState.userId);
+    event = await query.get();
+
+    for (var child in event.children) {
+      drugs.add(child.child("ScannedDrugId").value);
+    }
+
+    var lastFiveDrugs = drugs.reversed.take(5);
+
+    if(lastFiveDrugs.contains(int.parse(key)))
+    {
+      return;
+    }
+
+    ref = FirebaseDatabase.instance.ref("UserMedicine/$counter");
+
+    await ref.set({
+      "ScannedDrugId": int.parse(key),
+      "UserId": HomePageState.userId
+    });
 
   }
 
@@ -278,7 +317,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
               child: Column(
                   children: [
                         Text(
-                            short.replaceAll("<", "\n"),
+                            short.replaceAll("<", "\n\n"),
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 14)
@@ -317,7 +356,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
-                Text("I cannot handle your request. It happens when I do not have the data of the medicine or you cannot show the name properly to the screen."),
+                Text("I cannot handle your request. \nOne of these may happened: \n\n - I do not have this medicine on my database \n\n - Unexpected exception occured (Try to go home page and come back to scan again) \n\n - Internet connection lost \n\n - I know this medicine but I cannot read it, show me more clearly."),
               ],
             ),
           ),

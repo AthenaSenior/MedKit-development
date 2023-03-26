@@ -23,7 +23,8 @@ class HomePageState extends State<HomePage> {
 
   static bool registeredForFirstTime = false;
 
-  String backgroundImage = "", title = "", userId = "", name = "", initialTextOne = "", initialTextTwo = "";
+  String backgroundImage = "", title = "", name = "", initialTextOne = "", initialTextTwo = "";
+  static int userId = 0;
   // String variables for UI
 
   var userMedicines = [], drugNames = [], drugShortDescriptions = [],
@@ -47,6 +48,8 @@ class HomePageState extends State<HomePage> {
         where('email', isEqualTo: widget.loggedInUserKey).get();
         setState(() {
           name = snapshot.docs[0].get('userName');
+          userId = snapshot.docs[0].get("ID");
+          print(userId);
         });
         break;
       }
@@ -254,8 +257,9 @@ class HomePageState extends State<HomePage> {
                           const Text(
                               "My Last Scan",
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24)
+                                  color: Colors.black54,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold)
                           )
                               ],
                           ),
@@ -870,7 +874,7 @@ class HomePageState extends State<HomePage> {
                                       fontSize: 17)
                               ),
                               SizedBox(
-                                  height: size.height * .07
+                                  height: size.height * .06
                               ),
                               Image.asset("assets/images/medkit_logo.png",
                                width: 90, height: 90),
