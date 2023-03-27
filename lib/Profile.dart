@@ -745,7 +745,7 @@ class ProfileState extends State<Profile> {
                                             )
                                         ),
                                         SizedBox(
-                                          width: size.width * .07,
+                                          width: size.width * .1,
                                         ),
                                         SizedBox(
                                           width: size.width * .25,

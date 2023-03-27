@@ -119,7 +119,7 @@ class DrugDetailState extends State<DrugDetail> {
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
                                     color: Colors.black,
-                                    fontSize: 15)
+                                    fontSize: 30)
                             ),
                           ),
                         ),
