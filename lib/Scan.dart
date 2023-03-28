@@ -237,6 +237,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
       for (var item in drugs) {
         if(item.contains(word)){
           scannedDrugName = item;
+          break; // Documentation: https://i.kym-cdn.com/entries/icons/mobile/000/032/031/man.jpg
         }
       }
     }

@@ -160,7 +160,7 @@ class HomePageState extends State<HomePage> {
 
     if(registeredForFirstTime)
       {
-        initialTextOne = "Welcome, $name! \n\nI've been prepared perfectly to help you!";
+        initialTextOne = "Welcome, $name! \nI've been prepared perfectly to help you!";
         initialTextTwo = "You can navigate other pages to explore me.";
       }
     else{
