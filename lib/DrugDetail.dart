@@ -20,18 +20,23 @@ class DrugDetailState extends State<DrugDetail> {
 
   final AuthService _authService = AuthService();
   String backgroundImage = "", title = "";
+  late Color backColor;
   //Variable initializations.
 
   void createUIWithHour() {
     var dt = DateTime.now().hour;
     if (dt >= 6 && dt < 12) {
       backgroundImage = "assets/images/morning.jpg";
+      backColor = Colors.black;
     } else if (dt >= 12 && dt < 18) {
       backgroundImage = "assets/images/afternoon.jpg";
+      backColor = Colors.black;
     } else if (dt >= 18 && dt < 21) {
       backgroundImage = "assets/images/evening.jpg";
+      backColor = Colors.white70;
     } else if (dt >= 21 || dt < 6) {
       backgroundImage = "assets/images/night.jpg";
+      backColor = Colors.white70;
     }
   }
 
@@ -56,15 +61,15 @@ class DrugDetailState extends State<DrugDetail> {
             Row(children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back_ios_outlined,
-                  color: Colors.black,
+                  color: backColor,
                   size: 26,
                 ),
               ),
-              const Text("Back",
+              Text("Back",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black, fontSize: 26)),
+                  style: TextStyle(color: backColor, fontSize: 26)),
             ]),
             SizedBox(height: size.height * .01),
             Center(
@@ -83,7 +88,7 @@ class DrugDetailState extends State<DrugDetail> {
                       Text(widget.drugName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              color: Colors.black, fontSize: 30)),
+                              color: Colors.black, fontSize: 30, fontWeight: FontWeight.w400)),
                       SizedBox(height: size.height * .01),
                       Image.network(widget.drugPicture,
                           width: size.width * .55, height: size.height * .24),
@@ -94,7 +99,7 @@ class DrugDetailState extends State<DrugDetail> {
                           child: Text(widget.drugLongDesc,
                               textAlign: TextAlign.center,
                               style: const TextStyle(
-                                  color: Colors.black, fontSize: 29)),
+                                  color: Colors.black, fontSize: 20, fontWeight: FontWeight.w300)),
                         ),
                       ),
                     ]),

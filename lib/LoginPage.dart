@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'ForgotPasswordPage.dart';
 import 'Home.dart';
 import 'Main.dart';
 import 'RegisterPage.dart';
@@ -58,7 +59,7 @@ class LoginPageState extends State<LoginPage> {
             style: TextStyle(
               color: Colors.green,
               fontSize: 18,
-              fontWeight: FontWeight.bold)
+              fontWeight: FontWeight.w400)
           ),
           const SizedBox(
             height: 20,
@@ -67,7 +68,7 @@ class LoginPageState extends State<LoginPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(
-                height: size.height * .5,
+                height: size.height * .54,
                 width: size.width * .85,
                 decoration: BoxDecoration(
                     color: Colors.blueGrey.withOpacity(.35),
@@ -88,6 +89,7 @@ class LoginPageState extends State<LoginPage> {
                             controller: _emailController,
                             style: const TextStyle(
                               color: Colors.white,
+                                fontWeight: FontWeight.w600,
                             ),
                             cursorColor: Colors.white,
                             keyboardType: TextInputType.emailAddress,
@@ -115,6 +117,7 @@ class LoginPageState extends State<LoginPage> {
                         TextField(
                             style: const TextStyle(
                               color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             ),
                             cursorColor: Colors.white,
                             controller: _passwordController,
@@ -148,7 +151,7 @@ class LoginPageState extends State<LoginPage> {
                               style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 15,
-                                  fontWeight: FontWeight.bold)),
+                                fontWeight: FontWeight.w400,)),
                         ),
                         CheckboxListTile(
                           value: _rememberMe,
@@ -157,7 +160,7 @@ class LoginPageState extends State<LoginPage> {
                               _rememberMe = value!;
                             });
                           },
-                          title: const Text('Remember me for further logins', style: TextStyle(color: Colors.white),)
+                          title: const Text('Remember me for further logins', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300,),)
                         ),
                         SizedBox(
                           height: size.height * 0.01,
@@ -204,14 +207,49 @@ class LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
+                    InkWell(
+                      onTap: () {
+                        LoginPageState.informationInvalid = false;
+                        RegisterPageState.registerInformationInvalid = false;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                const ForgotPasswordPage()));
+                      },
+                      child:
+                          Column(
+                            children:[SizedBox(
+                              height: size.height * 0.03,
+                            ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children:[
+                              const Icon(
+                              Icons.lock,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: size.width * 0.02,
+                              ),
+                              const Text('I forget my password', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontSize: 15)),
+                              ]),
+                              SizedBox(
+                                height: size.height * 0.03,
+                              ),
+                              Container(
+                                height: 1,
+                                width: size.width * .95,
+                                color: Colors.white,
+                              ),
+                            ]
+                          )
+                    ),
                         SizedBox(
-                          height: size.height * 0.02,
+                          height: size.height * 0.01,
                         ),
                         InkWell(
                           onTap: () {
-                            setState(() {
-
-                            });
                             LoginPageState.informationInvalid = false;
                             RegisterPageState.registerInformationInvalid = false;
                             Navigator.push(
@@ -229,7 +267,7 @@ class LoginPageState extends State<LoginPage> {
                                 ),
                                 const Text(
                                   "No account yet?",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontSize: 16),
                                 ),
                                 const SizedBox(
                                   height: 20,
@@ -240,9 +278,13 @@ class LoginPageState extends State<LoginPage> {
                                     width: 75,
                                     color: Colors.white,
                                   ),
+                                  const Icon(
+                                    Icons.person,
+                                    color: Colors.white
+                                  ),
                                   const Text(
                                     "Register",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontSize: 15),
                                   ),
                                   Container(
                                     height: 1,

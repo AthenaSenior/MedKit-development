@@ -33,7 +33,10 @@ class FAQ extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async => false,
-      child: Scaffold(
+      child: Container(
+        color: Colors.black.withOpacity(.85),
+    child: SafeArea(
+    child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
           constraints: const BoxConstraints.expand(),
@@ -64,6 +67,7 @@ class FAQ extends StatelessWidget {
                       child:
                       Column(
                           children: [
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children:[
@@ -76,7 +80,7 @@ class FAQ extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 17)
                                 ),
                               ]
@@ -89,7 +93,11 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 17)
+                                    fontSize: 17,
+                                  fontWeight: FontWeight.w300)
+                            ),
+                            SizedBox(
+                                height: size.height * .02
                             ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -103,8 +111,8 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14)
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500)
                             ),
                             ]
                       ),
@@ -116,7 +124,10 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 17)
+                                    fontSize: 17, fontWeight: FontWeight.w300)
+                            ),
+                            SizedBox(
+                                height: size.height * .02
                             ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -130,8 +141,8 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17)
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17 )
                             ),
                             ]
                       ),
@@ -143,7 +154,10 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 17)
+                                    fontSize: 17,fontWeight: FontWeight.w300)
+                            ),
+                            SizedBox(
+                                height: size.height * .02
                             ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +171,7 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 17)
                             ),
                             ]
@@ -170,7 +184,10 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 17)
+                                    fontSize: 17, fontWeight: FontWeight.w300)
+                            ),
+                            SizedBox(
+                                height: size.height * .02
                             ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -184,7 +201,7 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 14)
                             ),
                             ]
@@ -197,7 +214,10 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 17)
+                                    fontSize: 17, fontWeight: FontWeight.w300)
+                            ),
+                            SizedBox(
+                                height: size.height * .02
                             ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -211,7 +231,7 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 15)
                             ),
                              ]
@@ -224,7 +244,7 @@ class FAQ extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 17)
+                                    fontSize: 17, fontWeight: FontWeight.w300)
                             ),
                             SizedBox(
                                 height: size.height * .02
@@ -242,6 +262,6 @@ class FAQ extends StatelessWidget {
           ),
         ),
       ),
-    );
+    )));
   }
 }

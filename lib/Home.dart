@@ -25,7 +25,8 @@ class HomePageState extends State<HomePage> {
 
   String backgroundImage = "", title = "", name = "", initialTextOne = "", initialTextTwo = "";
   static int userId = 0;
-  // String variables for UI
+  late Color color;
+  // Variables for UI
 
   var userMedicines = [], drugNames = [], drugShortDescriptions = [],
       drugPictures = [], drugLongDescriptions = [], drugVisibilities = [false, false, false, false, false, false];
@@ -141,21 +142,25 @@ class HomePageState extends State<HomePage> {
     {
       backgroundImage = "assets/images/morning.jpg";
       title = "☀ Good morning, $name!";
+      color = Colors.black;
     }
     else if (dt >= 12 && dt < 18)
     {
       backgroundImage = "assets/images/afternoon.jpg";
       title = "☀ Good afternoon, $name!";
+      color = Colors.black;
     }
     else if (dt >= 18 && dt < 21)
     {
       backgroundImage = "assets/images/evening.jpg";
       title = "🌙 Good evening, $name!";
+      color = Colors.white70;
     }
     else if (dt >= 21 || dt < 6)
     {
       backgroundImage = "assets/images/night.jpg";
       title = "🌙 Good night, $name!";
+      color = Colors.white70;
     }
 
     if(registeredForFirstTime)
@@ -178,7 +183,10 @@ class HomePageState extends State<HomePage> {
       child: isLoading? const Scaffold(
         body: Loader(),
         )
-          : Scaffold(
+          : Container(
+    color: Colors.black.withOpacity(.85),
+    child: SafeArea(
+      child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
           constraints: const BoxConstraints.expand(),
@@ -204,23 +212,26 @@ class HomePageState extends State<HomePage> {
                     Column(
                     children:[
                       SizedBox(
-                        height: size.height * 0.02,
+                        height: size.height * 0.01,
                       ),
                       Container(
-                          color: Colors.black.withOpacity(0.25),
                           width: size.width * .95,
                           child:
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child:
-                            Text(
-                            "$title\nHow can I help you today?",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 21)
-                      ),
-                      ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children:[
+                                  Text(
+                                      "$title\nHow can I help you today?",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: color,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 21)
+                                  ),
+                                  Image.asset("assets/images/medkit_logo.png",
+                                      width: size.width * 0.25, height: size.height * 0.08),
+                                ]
+                              )
                       ),
                       ],
                     ),
@@ -258,7 +269,7 @@ class HomePageState extends State<HomePage> {
                               style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: 26,
-                                  fontWeight: FontWeight.bold)
+                                fontWeight: FontWeight.w300)
                           )
                               ],
                           ),
@@ -294,7 +305,7 @@ class HomePageState extends State<HomePage> {
                                                           style: const TextStyle(
                                                               color: Colors.black,
                                                               fontSize: 20,
-                                                              fontWeight: FontWeight.bold)
+                                                              fontWeight: FontWeight.w500)
                                                       )
                                                   ),
                                                   SizedBox(
@@ -307,7 +318,7 @@ class HomePageState extends State<HomePage> {
                                                         drugShortDescriptions.isNotEmpty ? drugShortDescriptions[0].replaceAll("<", "\n\n") : 'No Medicine',
                                                         style: const TextStyle(
                                                             color: Colors.black,
-                                                            fontSize: 10)
+                                                            fontSize: 12)
                                                     )
                                                 ),
                                                 ]
@@ -334,7 +345,7 @@ class HomePageState extends State<HomePage> {
                                         style: TextStyle(
                                             fontSize: 21,
                                             color: Colors.blueAccent,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ),
                                 ),
@@ -361,7 +372,7 @@ class HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .50,
+                  height: size.height * .47,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                     color: Colors.white70.withOpacity(.85),
@@ -381,7 +392,7 @@ class HomePageState extends State<HomePage> {
                                 style: TextStyle(
                                     color: Colors.blueGrey,
                                     fontSize: 26,
-                                    fontWeight: FontWeight.bold)
+                                    fontWeight: FontWeight.w300)
                             ),
                           ],
                         ),
@@ -392,7 +403,7 @@ class HomePageState extends State<HomePage> {
                             color: Colors.black
                         ),
                   SizedBox(
-                     height: size.height * .3710,
+                     height: size.height * .354,
                     child:
                   SingleChildScrollView(
                     child:
@@ -418,7 +429,7 @@ class HomePageState extends State<HomePage> {
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
-                                                        fontWeight: FontWeight.bold)
+                                                        fontWeight: FontWeight.w500)
                                                 )
                                             ),
                                             SizedBox(
@@ -428,10 +439,10 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[1].replaceAll("<", "\n") : 'No Medicine Description',
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[1].replaceAll("<", "\n\n") : 'No Medicine Description',
                                                     style: const TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 10)
+                                                        fontSize: 12)
                                                 )
                                             ),
                                           ]
@@ -467,7 +478,7 @@ class HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                         fontSize: 21,
                                         color: Colors.blueAccent,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -502,7 +513,7 @@ class HomePageState extends State<HomePage> {
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
-                                                        fontWeight: FontWeight.bold)
+                                                        fontWeight: FontWeight.w500)
                                                 )
                                             ),
                                             SizedBox(
@@ -512,10 +523,10 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[2].replaceAll("<", "\n") : '',
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[2].replaceAll("<", "\n\n") : '',
                                                     style: const TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 10)
+                                                        fontSize: 12)
                                                 )
                                             ),
                                           ]
@@ -551,7 +562,7 @@ class HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                         fontSize: 21,
                                         color: Colors.blueAccent,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -587,7 +598,7 @@ class HomePageState extends State<HomePage> {
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
-                                                        fontWeight: FontWeight.bold)
+                                                        fontWeight: FontWeight.w500)
                                                 )
                                             ),
                                             SizedBox(
@@ -597,10 +608,10 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[3].replaceAll("<", "\n") : '',
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[3].replaceAll("<", "\n\n") : '',
                                                     style: const TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 10)
+                                                        fontSize: 12)
                                                 )
                                             ),
                                           ]
@@ -636,7 +647,7 @@ class HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                         fontSize: 21,
                                         color: Colors.blueAccent,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -672,7 +683,7 @@ class HomePageState extends State<HomePage> {
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
-                                                        fontWeight: FontWeight.bold)
+                                                        fontWeight: FontWeight.w500)
                                                 )
                                             ),
                                             SizedBox(
@@ -682,10 +693,10 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[4].replaceAll("<", "\n") : '',
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[4].replaceAll("<", "\n\n") : '',
                                                     style: const TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 10)
+                                                        fontSize: 12)
                                                 )
                                             ),
                                           ]
@@ -721,7 +732,7 @@ class HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                         fontSize: 21,
                                         color: Colors.blueAccent,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -757,7 +768,7 @@ class HomePageState extends State<HomePage> {
                                                     style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
-                                                        fontWeight: FontWeight.bold)
+                                                        fontWeight: FontWeight.w500)
                                                 )
                                             ),
                                             SizedBox(
@@ -767,10 +778,10 @@ class HomePageState extends State<HomePage> {
                                                 alignment: Alignment.centerLeft,
                                                 child:
                                                 Text(
-                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[5].replaceAll("<", "\n") : '',
+                                                    drugShortDescriptions.isNotEmpty ? drugShortDescriptions[5].replaceAll("<", "\n\n") : '',
                                                     style: const TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 10)
+                                                        fontSize: 12)
                                                 )
                                             ),
                                           ]
@@ -806,7 +817,7 @@ class HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                         fontSize: 21,
                                         color: Colors.blueAccent,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
@@ -904,6 +915,7 @@ class HomePageState extends State<HomePage> {
           ]),
         ),
       ),
-    );
+      ),
+    ));
   }
 }

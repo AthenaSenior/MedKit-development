@@ -42,6 +42,7 @@ class ProfileState extends State<Profile> {
   String backgroundImage = "";
   String userDocumentUID = "", gender = "", userName = "", userNote = "", totalScannedDrugs = "0", registerDate = "null";
   String userPicture = "";
+  late Color backToProfileColor;
   // Variable initializations
 
   Future<void> resetRememberMeAfterLogOut() async {
@@ -122,18 +123,22 @@ class ProfileState extends State<Profile> {
     if(dt >= 6 && dt < 12)
     {
       backgroundImage = "assets/images/morning.jpg";
+      backToProfileColor = Colors.black;
     }
     else if (dt >= 12 && dt < 18)
     {
       backgroundImage = "assets/images/afternoon.jpg";
+      backToProfileColor = Colors.black;
     }
     else if (dt >= 18 && dt < 21)
     {
       backgroundImage = "assets/images/evening.jpg";
+      backToProfileColor = Colors.white70;
     }
     else if (dt >= 21 || dt < 6)
     {
       backgroundImage = "assets/images/night.jpg";
+      backToProfileColor = Colors.white70;
     }
   }
 
@@ -215,7 +220,10 @@ class ProfileState extends State<Profile> {
       child: isLoading? const Scaffold(
         body: Loader(),
       )
-          : Scaffold(
+          : Container(
+        color: Colors.black.withOpacity(.85),
+    child: SafeArea(
+    child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
           constraints: const BoxConstraints.expand(),
@@ -226,9 +234,6 @@ class ProfileState extends State<Profile> {
               )),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
               Widget>[
-            SizedBox(
-                height: size.height * .05
-            ),
             Visibility(
               visible: isView,
             child:
@@ -236,7 +241,7 @@ class ProfileState extends State<Profile> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .87,
+                  height: size.height * .86,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                     color: Colors.white70.withOpacity(.75),
@@ -269,7 +274,8 @@ class ProfileState extends State<Profile> {
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           color: Colors.black,
-                                          fontSize: 25)
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w400)
                                   ),
                                   SizedBox(
                                       height: size.height * .02
@@ -279,7 +285,8 @@ class ProfileState extends State<Profile> {
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           color: Colors.black45,
-                                          fontSize: 15)
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500)
                                   ),
                                 ]
                               )
@@ -289,7 +296,7 @@ class ProfileState extends State<Profile> {
                           Row(
                             children:[
                               SizedBox(
-                                  width: size.width * .45
+                                  width: size.width * .52
                               ),
                               ElevatedButton.icon(
                                 onPressed: () => {
@@ -309,7 +316,7 @@ class ProfileState extends State<Profile> {
                                   style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.w400),
                                 ), // <-- Text
                               ),
                                       ]
@@ -332,7 +339,8 @@ class ProfileState extends State<Profile> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 17)
+                                            fontSize: 17,
+                                              fontWeight: FontWeight.w300)
                                       ),
                                       Text(
                                           registerDate,
@@ -340,7 +348,7 @@ class ProfileState extends State<Profile> {
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 17,
-                                              fontWeight: FontWeight.bold)
+                                              fontWeight: FontWeight.w500)
                                       ),
                                     ]
                                 ),
@@ -354,7 +362,8 @@ class ProfileState extends State<Profile> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 17,)
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w300)
                                       ),
                                       Text(
                                           totalScannedDrugs,
@@ -362,14 +371,15 @@ class ProfileState extends State<Profile> {
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 17,
-                                              fontWeight: FontWeight.bold)
+                                              fontWeight: FontWeight.w500)
                                       ),
                                       Text(
                                         totalScannedDrugs == "1" || totalScannedDrugs == "0" ? " medicine." : " medicines.",
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
                                               color: Colors.black,
-                                              fontSize: 17)
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w300)
                                       ),
                                     ]
                                 ),
@@ -389,20 +399,20 @@ class ProfileState extends State<Profile> {
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 20,
-                                          fontWeight: FontWeight.bold)
+                                          fontWeight: FontWeight.w400)
                                     ),
                                   ]
                                 ),
                                 SizedBox(
-                                    height: size.height * .20
+                                    height: size.height * .22
                                 ),
                                 const Text(
                                     "Be careful for those listed above. It is not recommended to use them together.",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold)
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300)
                                 ),
                                 SizedBox(
                                     height: size.height * .02
@@ -420,7 +430,7 @@ class ProfileState extends State<Profile> {
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 20,
-                                              fontWeight: FontWeight.bold)
+                                              fontWeight: FontWeight.w400)
                                       ),
                                     ]
                                 ),
@@ -437,7 +447,8 @@ class ProfileState extends State<Profile> {
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                             color: Colors.black,
-                                            fontSize: 15)
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300)
                                     ),
                                   ),
                                 ),
@@ -467,17 +478,17 @@ class ProfileState extends State<Profile> {
                                 isEdit = false;
                               })
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.arrow_back_ios_outlined,
-                              color: Colors.black,
+                              color: backToProfileColor,
                               size: 25,
                             ),
                           ),
-                          const Text(
+                          Text(
                               "Back to profile",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: backToProfileColor,
                                   fontSize: 25)
                           ),
                         ]
@@ -514,7 +525,7 @@ class ProfileState extends State<Profile> {
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 26,
-                                        fontWeight: FontWeight.bold)
+                                        fontWeight: FontWeight.w500)
                                 ),
                               ]
                             ),
@@ -543,7 +554,8 @@ class ProfileState extends State<Profile> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 20)
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w300)
                                 ),
                                 const Text(
                                     "Change your full name any time you wish.",
@@ -551,7 +563,7 @@ class ProfileState extends State<Profile> {
                                     style: TextStyle(
                                         color: Colors.blueGrey,
                                         fontSize: 15,
-                                        fontWeight: FontWeight.bold)
+                                        fontWeight: FontWeight.w400)
                                 ),
                                 SizedBox(
                                     height: size.height * .03,
@@ -609,7 +621,7 @@ class ProfileState extends State<Profile> {
                                         style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.w400),
                                       ), // <-- Text
                                     ),
                                     )
@@ -630,7 +642,8 @@ class ProfileState extends State<Profile> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 20)
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w300)
                                   ),
                                   const Text(
                                       "Change your e-mail instantly.",
@@ -638,7 +651,7 @@ class ProfileState extends State<Profile> {
                                       style: TextStyle(
                                           color: Colors.blueGrey,
                                           fontSize: 15,
-                                          fontWeight: FontWeight.bold)
+                                          fontWeight: FontWeight.w400)
                                   ),
                                   SizedBox(
                                     height: size.height * .025,
@@ -696,7 +709,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                                  fontWeight: FontWeight.w400),
                                             ), // <-- Text
                                           ),
                                         )
@@ -723,7 +736,8 @@ class ProfileState extends State<Profile> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 20)
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w300)
                                   ),
                                   const Text(
                                       "Change your password in any time.",
@@ -731,7 +745,7 @@ class ProfileState extends State<Profile> {
                                       style: TextStyle(
                                           color: Colors.blueGrey,
                                           fontSize: 15,
-                                          fontWeight: FontWeight.bold)
+                                          fontWeight: FontWeight.w400)
                                   ),
                                   SizedBox(
                                     height: size.height * .02,
@@ -816,7 +830,7 @@ class ProfileState extends State<Profile> {
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                                  fontWeight: FontWeight.w400),
                                             ), // <-- Text
                                           ),
                                         )
@@ -840,7 +854,8 @@ class ProfileState extends State<Profile> {
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 20)
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w300)
                                         ),
                                         const Text(
                                             "You can change your gender selection by this section.",
@@ -848,7 +863,7 @@ class ProfileState extends State<Profile> {
                                             style: TextStyle(
                                                 color: Colors.blueGrey,
                                                 fontSize: 15,
-                                                fontWeight: FontWeight.bold)
+                                                fontWeight: FontWeight.w400)
                                         ),
                                         SizedBox(
                                           height: size.height * .025,
@@ -927,7 +942,7 @@ class ProfileState extends State<Profile> {
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.bold),
+                                                        fontWeight: FontWeight.w400),
                                                   ), // <-- Text
                                                 ),
                                               )
@@ -956,7 +971,8 @@ class ProfileState extends State<Profile> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 20)
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w300)
                                       ),
                                       const Text(
                                           "Update your daily notes by this section.",
@@ -964,7 +980,7 @@ class ProfileState extends State<Profile> {
                                           style: TextStyle(
                                               color: Colors.blueGrey,
                                               fontSize: 15,
-                                              fontWeight: FontWeight.bold)
+                                              fontWeight: FontWeight.w400)
                                       ),
                                       SizedBox(
                                         height: size.height * .02,
@@ -1014,7 +1030,7 @@ class ProfileState extends State<Profile> {
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold),
+                                                      fontWeight: FontWeight.w400),
                                                 ), // <-- Text
                                               ),
                                             )
@@ -1041,6 +1057,6 @@ class ProfileState extends State<Profile> {
           ),
         ),
       ),
-    );
+    )));
   }
 }

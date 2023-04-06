@@ -82,7 +82,7 @@ class MainPageState extends State<MainPage> {
           ),
         ],
         currentIndex: widget.pageId,
-        selectedItemColor: Colors.blueAccent,
+        selectedItemColor: Colors.green,
         onTap: (i){
           setState(() {//
             widget.pageId = i; // index
