@@ -1,7 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:med_kit/service/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'Home.dart';
 import 'LoginPage.dart';
+import 'Main.dart';
+import 'RegisterPage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController animationController;
   int _start = 10;
   late Timer splashTimer;
+  final AuthService _authService = AuthService();
   // Initialization of variables @Egemen
 
   // Animation - Rotation Function @Egemen
@@ -33,11 +39,17 @@ class _SplashScreenState extends State<SplashScreen>
       (Timer timer) {
         if (_start == 0) {
           setState(() {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const LoginPage())); // We will redirect them to login page by here. @Egemen
+            getRememberMeToAutoLoginOrNot().then((value) {
+              if(value) {
+                print("Auto-login has succeed.");
+              } else {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                        const LoginPage()));
+              }
+            });
           });
           timer.cancel();
         } else if (_start == 6) {
@@ -83,6 +95,28 @@ class _SplashScreenState extends State<SplashScreen>
   void dispose() {
     animationController.dispose();
     super.dispose(); // Dispose for animation @Egemen
+  }
+
+  Future<bool> getRememberMeToAutoLoginOrNot() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getBool('rememberMe') == true)
+    {
+      String user = prefs.getString('rememberedUserEmail') ?? "";
+      String pass = prefs.getString('rememberedUserPass')  ?? "";
+      _authService
+          .logInToSystem(user, pass)
+          .then((value) {
+        LoginPageState.informationInvalid = false;
+        HomePageState.registeredForFirstTime = false;
+        RegisterPageState.registerInformationInvalid = false;
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainPage(pageId: 0)));
+      });
+      return true;
+    }
+    return false;
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'FAQ.dart';
 import 'Home.dart';
 import 'LoginPage.dart';
@@ -31,6 +32,13 @@ class MainPageState extends State<MainPage> {
     FAQ(),
     const LoginPage()
   ];
+
+  Future<void> resetRememberMeAfterLogOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('rememberedUserEmail', "");
+    prefs.setString('rememberedUserPass', "");
+    prefs.setBool('rememberMe', false);
+  }
 
   @override
   Widget build(BuildContext context) { // Main widget
@@ -84,6 +92,7 @@ class MainPageState extends State<MainPage> {
             }
             else if(widget.pageId == 4){
               _authService.signOut();
+              resetRememberMeAfterLogOut();
               Navigator.push(
                   context,
                   MaterialPageRoute(

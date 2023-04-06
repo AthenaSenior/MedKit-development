@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Home.dart';
 import 'Main.dart';
 import 'RegisterPage.dart';
@@ -16,11 +17,25 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   static bool informationInvalid = false;
   final AuthService _authService = AuthService();
+  bool _rememberMe = false;
   // Initialization of variables
+
+  Future<void> setRememberMe(String email, String pass, bool rememberMe) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('rememberedUserEmail', _emailController.text);
+    prefs.setString('rememberedUserPass', _passwordController.text);
+    prefs.setBool('rememberMe', rememberMe);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) { // Main widget
     var size = MediaQuery.of(context).size;
+
     return WillPopScope(
         onWillPop: () async => false,
     child: Scaffold(
@@ -135,8 +150,17 @@ class LoginPageState extends State<LoginPage> {
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold)),
                         ),
+                        CheckboxListTile(
+                          value: _rememberMe,
+                          onChanged: (value) {
+                            setState(() {
+                              _rememberMe = value!;
+                            });
+                          },
+                          title: const Text('Remember me for further logins', style: TextStyle(color: Colors.white),)
+                        ),
                         SizedBox(
-                          height: size.height * 0.04,
+                          height: size.height * 0.01,
                         ),
                         InkWell(
                           onTap: () {
@@ -145,6 +169,10 @@ class LoginPageState extends State<LoginPage> {
                                   .logInToSystem(_emailController.text,
                                   _passwordController.text)
                                   .then((value) {
+                                    if(_rememberMe)
+                                      {
+                                        setRememberMe(_emailController.text, _passwordController.text, _rememberMe);
+                                      }
                                 LoginPageState.informationInvalid = false;
                                 HomePageState.registeredForFirstTime = false;
                                 RegisterPageState.registerInformationInvalid = false;

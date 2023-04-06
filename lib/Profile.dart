@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart' as fbDb;
 import 'package:med_kit/Main.dart';
 import 'package:med_kit/service/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Loader.dart';
 import 'LoginPage.dart';
 
@@ -42,6 +43,13 @@ class ProfileState extends State<Profile> {
   String userDocumentUID = "", gender = "", userName = "", userNote = "", totalScannedDrugs = "0", registerDate = "null";
   String userPicture = "";
   // Variable initializations
+
+  Future<void> resetRememberMeAfterLogOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('rememberedUserEmail', "");
+    prefs.setString('rememberedUserPass', "");
+    prefs.setBool('rememberMe', false);
+  }
 
   Future<void> getLoggedInUserProfileInfo()
   async {
@@ -156,6 +164,7 @@ class ProfileState extends State<Profile> {
                 }
                 else{
                   _authService.signOut();
+                  resetRememberMeAfterLogOut();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
