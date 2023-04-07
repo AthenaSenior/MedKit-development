@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -11,11 +14,44 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
-  bool emailInvalid = false, emailValid = false;
+  bool emailInvalid = false, emailValid = false, wait = false;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final AuthService _authService = AuthService();
   String errorText = "";
   // Initialization of variables and instances
+
+  Future<void> saveDate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    DateTime now = DateTime.now();
+    String formattedDate = "${now.day}-${now.month}-${now.year}";
+    await prefs.setString("lastDate", formattedDate);
+  }
+
+  Future<DateTime?> getDate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String savedDate = prefs.getString("lastDate") ?? "";
+    List<String> dateParts = savedDate.split("-");
+    if (dateParts.length != 3) {
+      return null;
+    }
+    int? year = int.tryParse(dateParts[2]);
+    int? month = int.tryParse(dateParts[1]);
+    int? day = int.tryParse(dateParts[0]);
+    if (year == null || month == null || day == null) {
+      return null;
+    }
+    return DateTime(year, month, day);
+  }
+
+  Future<void> setPasswordResetRequestLimit(bool limit) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('wait', limit);
+  }
+
+  Future<bool?> getPasswordResetRequestLimit() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('wait');
+  }
 
   Future<bool> searchEmailInDb(String email)
   async {
@@ -33,6 +69,15 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   void initState() {
     super.initState();
+    getDate().then((date)
+    {
+      DateTime dt = DateTime.now(); // BURAYI APİDEN GELECEK TARİH İLE DEĞİŞTİRELİM.
+      int? res = date?.difference(dt).inDays;
+      if(res! < 0)
+        {
+          setPasswordResetRequestLimit(false);
+        }
+    });
   }
 
   @override
@@ -76,7 +121,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                              "If you forgot your password, I can send a link for changing your password to your e-mail address. You can set a new password with that link.",
+                              "If you forgot your password, I can send a link for changing your password to your e-mail address. You can set a new password with that link. \n\n You can get only one e-mail per day.",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
@@ -84,7 +129,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   fontWeight: FontWeight.w300)
                           ),
                           SizedBox(
-                            height: size.height * 0.05,
+                            height: size.height * 0.035,
                           ),
                           const Text(
                               "Please enter your e-mail.",
@@ -139,33 +184,52 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           ),
                           InkWell(
                             onTap: () {
-                              if(_emailController.text.isEmpty)
-                                {
-                                  setState(() {
-                                  errorText = "Please enter an e-mail.";
-                                  emailInvalid = true;
-                                  emailValid = false;
-                                  });
-                                }
-                              else{
-                                searchEmailInDb(_emailController.text).then((value)
-                                {
-                                  if(value)
+                              getPasswordResetRequestLimit().then((val)
+                              {
+                                if(val != null)
                                   {
-                                    setState(() { // If e-mail is valid and exists in system
-                                      emailInvalid = false;
-                                      emailValid = true;
-                                      _authService.resetPassword(_emailController.text);
-                                    });
+                                    if(!val)
+                                      {
+                                        if(_emailController.text.isEmpty)
+                                        {
+                                          setState(() {
+                                            errorText = "Please enter an e-mail.";
+                                            emailInvalid = true;
+                                            emailValid = false;
+                                          });
+                                        }
+                                        else{
+                                          searchEmailInDb(_emailController.text).then((value)
+                                          {
+                                            if(value)
+                                            {
+                                              setState(() { // If e-mail is valid and exists in system
+                                                emailInvalid = false;
+                                                emailValid = true;
+                                                _authService.resetPassword(_emailController.text);
+                                                saveDate();
+                                                setPasswordResetRequestLimit(true); // Every user can request password reset one time in a day
+                                              });
+                                            }
+                                            else{
+                                              setState(() {
+                                                emailInvalid = true;
+                                                emailValid = false;
+                                                errorText = "I cannot recognize this email. Make sure this is a valid e-mail or an account exists with it.";
+                                              });
+                                            }});
+                                        }
+                                      }
+                                    else{
+                                      setState(() {
+                                        emailInvalid = false;
+                                        emailValid = false;
+                                        wait = true;
+                                      });
+                                    }
                                   }
-                                  else{
-                                    setState(() {
-                                      emailInvalid = true;
-                                      emailValid = false;
-                                      errorText = "I cannot recognize this email. Make sure this is a valid e-mail or an account exists with it.";
-                                    });
-                                  }});
-                              }
+                              });
+
                               },
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -197,6 +261,15 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.greenAccent,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400)),
+                          ),
+                          Visibility(
+                            visible: wait,
+                            child: const Text("Please wait before getting another reset password mail.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.lightBlueAccent,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400)),
                           ),

@@ -52,7 +52,7 @@ class AuthService {
       var user = await _auth.currentUser!;
       final cred = await _auth.signInWithEmailAndPassword(
           email: user.email!, password: currentPassword); // Try to login
-      var x = await user.updatePassword(newPassword); // If successfully login, it means old pass is true. So set the password as new
+      await user.updatePassword(newPassword); // If successfully login, it means old pass is true. So set the password as new
       ProfileState.error = false;
       return cred;
     }
@@ -60,6 +60,10 @@ class AuthService {
      ProfileState.error = true;
      ProfileState.errorMessage = "Current password is invalid.";
     }
+  }
+
+  void resetPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
   }
 
   // Sign out function
@@ -81,6 +85,24 @@ class AuthService {
       await _auth.createUserWithEmailAndPassword(email: "", password: "");
       return user.user;
     }
+
+    if(name.length < 6)
+      {
+        RegisterPageState.registerInformationInvalid = true;
+        RegisterPageState.errorMessage = "Name should not be less than 6 characters.";
+        var user =
+        await _auth.createUserWithEmailAndPassword(email: "", password: "");
+        return user.user;
+      }
+
+    if(password.length < 6)
+      {
+        RegisterPageState.registerInformationInvalid = true;
+        RegisterPageState.errorMessage = "Password should not be less than 6 characters.";
+        var user =
+        await _auth.createUserWithEmailAndPassword(email: "", password: "");
+        return user.user;
+      }
 
     // Check passwords are equal.
     if(password != passwordRepeat)
