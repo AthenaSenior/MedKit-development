@@ -39,7 +39,7 @@ class RegisterPageState extends State<RegisterPage> {
               constraints: const BoxConstraints.expand(),
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("assets/images/background2.jpg"),
+                    image: AssetImage("assets/images/loaderbg.jpg"),
                     fit: BoxFit.cover,
                   )),
               child: Center(
@@ -257,7 +257,7 @@ class RegisterPageState extends State<RegisterPage> {
                                   style: const TextStyle(
                                       color: Colors.red,
                                       fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
+                                      fontWeight: FontWeight.w400)),
                             ),
                             SizedBox(
                               height: size.height * 0.04,
@@ -337,7 +337,7 @@ class RegisterPageState extends State<RegisterPage> {
                       style: TextStyle(
                           fontSize: 24,
                           color: Colors.blueGrey.withOpacity(.65),
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w400),
                     ),
                     SizedBox(
                       width: size.width * 0.03,

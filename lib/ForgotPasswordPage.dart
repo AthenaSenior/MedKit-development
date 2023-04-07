@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:med_kit/service/auth.dart';
 
@@ -12,31 +11,28 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
-  bool emailInvalid = false;
+  bool emailInvalid = false, emailValid = false;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final AuthService _authService = AuthService();
-  // Initialization of variables
+  String errorText = "";
+  // Initialization of variables and instances
+
+  Future<bool> searchEmailInDb(String email)
+  async {
+    var snapshot = await firestore.collection("Med-Kit User").
+    where('email', isEqualTo: email).get();
+    if(snapshot.size == 0)
+      {
+        errorText = "I cannot recognize this email. Make sure this is a valid e-mail or an account exists with it.";
+        return false;
+      }
+    return true;
+  }
+
 
   @override
   void initState() {
     super.initState();
-  }
-
-  String generatePassword() { // returns a random password.
-    String upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    String lower = 'abcdefghijklmnopqrstuvwxyz';
-    String numbers = '1234567890';
-    String symbols = '!@#\$%^&*()<>,./';
-    int passLength = 16;
-    String seed = upper + lower + numbers + symbols;
-    String password = '';
-    List<String> list = seed.split('').toList();
-    Random rand = Random();
-
-    for (int i = 0; i < passLength; i++) {
-      int index = rand.nextInt(list.length);
-      password += list[index];
-    }
-    return password;
   }
 
   @override
@@ -80,7 +76,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                              "If you forgot your password, I can generate you a new password and send it to your e-mail. After login, you can change it via your profile.",
+                              "If you forgot your password, I can send a link for changing your password to your e-mail address. You can set a new password with that link.",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
@@ -127,22 +123,49 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                     )),
                               )),
                           SizedBox(
-                            height: size.height * 0.06,
+                            height: size.height * 0.03,
                           ),
                           Visibility(
                             visible: emailInvalid,
-                            child: const Text("I cannot recognize this email. Are you sure you have an account with this?",
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold)),
+                            child: Text(errorText,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: Colors.redAccent,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400)),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.03,
                           ),
                           InkWell(
                             onTap: () {
-                              setState(() {
-                                    print(_emailController.text);
-                                    print(generatePassword());
-                                });
+                              if(_emailController.text.isEmpty)
+                                {
+                                  setState(() {
+                                  errorText = "Please enter an e-mail.";
+                                  emailInvalid = true;
+                                  emailValid = false;
+                                  });
+                                }
+                              else{
+                                searchEmailInDb(_emailController.text).then((value)
+                                {
+                                  if(value)
+                                  {
+                                    setState(() { // If e-mail is valid and exists in system
+                                      emailInvalid = false;
+                                      emailValid = true;
+                                      _authService.resetPassword(_emailController.text);
+                                    });
+                                  }
+                                  else{
+                                    setState(() {
+                                      emailInvalid = true;
+                                      emailValid = false;
+                                      errorText = "I cannot recognize this email. Make sure this is a valid e-mail or an account exists with it.";
+                                    });
+                                  }});
+                              }
                               },
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -164,6 +187,18 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                     )),
                               ),
                             ),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          Visibility(
+                            visible: emailValid,
+                            child: const Text("I sent an e-mail that including your new password!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.greenAccent,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400)),
                           ),
                         ],
                       ),

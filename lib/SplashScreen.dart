@@ -151,7 +151,8 @@ class _SplashScreenState extends State<SplashScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(splashScreenSentence,
-                      style: const TextStyle(fontSize: 18)),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
                 ]),
           ],
         ),

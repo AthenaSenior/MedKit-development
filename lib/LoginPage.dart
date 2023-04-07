@@ -68,7 +68,7 @@ class LoginPageState extends State<LoginPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(
-                height: size.height * .54,
+                height: size.height * .58,
                 width: size.width * .85,
                 decoration: BoxDecoration(
                     color: Colors.blueGrey.withOpacity(.35),
@@ -220,7 +220,13 @@ class LoginPageState extends State<LoginPage> {
                       child:
                           Column(
                             children:[SizedBox(
-                              height: size.height * 0.03,
+                              height: size.height * 0.02,
+                            ),Container(
+                              height: 1,
+                              width: size.width * .95,
+                              color: Colors.white,
+                            ),SizedBox(
+                              height: size.height * 0.02,
                             ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -235,7 +241,7 @@ class LoginPageState extends State<LoginPage> {
                               const Text('I forget my password', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontSize: 15)),
                               ]),
                               SizedBox(
-                                height: size.height * 0.03,
+                                height: size.height * 0.02,
                               ),
                               Container(
                                 height: 1,
