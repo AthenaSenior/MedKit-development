@@ -71,8 +71,11 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.initState();
     getDate().then((date)
     {
+
       DateTime dt = DateTime.now(); // BURAYI APİDEN GELECEK TARİH İLE DEĞİŞTİRELİM.
+
       int? res = date?.difference(dt).inDays;
+
       if(res! < 0)
         {
           setPasswordResetRequestLimit(false);
