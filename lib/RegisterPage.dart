@@ -230,14 +230,16 @@ class RegisterPageState extends State<RegisterPage> {
                             const Divider(
                                 color: Colors.white
                             ),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
                             CheckboxListTile(
                               value: _listTileCheckBox,
-                              // ignore: prefer_const_constructors
-                              title: Text(
+                              title: const Text(
                                 "I understand and agree that this application is only "
                                     "for suggestion and does not claiming any "
                                     "professional medical support.",
-                                style: const TextStyle(color: Colors.white, fontSize: 10),
+                                style: TextStyle(color: Colors.white, fontSize: 14),
                               ),
                               onChanged: (val) {
                                 setState(() {
@@ -249,7 +251,7 @@ class RegisterPageState extends State<RegisterPage> {
                               checkColor: Colors.black,
                             ),
                             SizedBox(
-                              height: size.height * 0.02,
+                              height: size.height * 0.01,
                             ),
                             Visibility(
                               visible: registerInformationInvalid,
