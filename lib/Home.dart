@@ -226,7 +226,7 @@ class HomePageState extends State<HomePage> {
                                       style: TextStyle(
                                           color: color,
                                           fontWeight: FontWeight.w300,
-                                          fontSize: 21)
+                                          fontSize: 19)
                                   ),
                                   Image.asset("assets/images/medkit_logo.png",
                                       width: size.width * 0.25, height: size.height * 0.08),

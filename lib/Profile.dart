@@ -32,7 +32,9 @@ class ProfileState extends State<Profile> {
   final notesController = TextEditingController();
   // Text Controllers for edit profile section to save data
 
-  List<String> list = <String>['Male', 'Female', 'Other'];
+  List<String> genderList = <String>['Male', 'Female', 'Other'];
+  List<String> oppositeDrugs = <String>[' '];
+  var userDrugToDrugs = [];
   String dropdownValue = '';
   late IconData icon;
   int userMedicines = 0;
@@ -59,6 +61,7 @@ class ProfileState extends State<Profile> {
     // E-mail is can be considered as unique key
     // Primary key is ID @Egemen
 
+    /*** Getting user data ***/
     var snapshot = await firestore.collection("Med-Kit User").
     where('email', isEqualTo: widget.loggedInUserKey).get();
 
@@ -68,6 +71,64 @@ class ProfileState extends State<Profile> {
     for (var child in event.children) {
       userMedicines++;
     }
+    /*** Getting user data ***/
+
+
+
+
+    /*** Getting drug to drug data ***/
+
+    print(snapshot.docs[0].get("ID"));
+
+    ref = fbDb.FirebaseDatabase.instance.ref("UserDrugToDrug");
+    query = ref.orderByChild("UserId").equalTo(
+        snapshot.docs[0].get("ID"));
+    event = await query.get();
+    for (var child in event.children) {
+      userDrugToDrugs.add(child.value);
+    }
+
+    if(userDrugToDrugs.isNotEmpty) {
+      for (int i = 0; i < userDrugToDrugs.length; i++) {
+        try{
+          var drugToDrugId = userDrugToDrugs[i]["DrugToDrugId"];
+          ref = fbDb.FirebaseDatabase.instance.ref("DrugToDrug").child(drugToDrugId.toString());
+          event = await ref.get();
+          if (event.exists) { // Check that drug to drug record exists
+
+            // Get Id of drugs
+            var data = Map<String, dynamic>.from(event.value as Map);
+            var firstDrugId = data["FirstMedicineId"];
+            var targetDrugId = data["TargetId"];
+
+            //Get first drug's name
+            ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(firstDrugId.toString());
+            event = await ref.get();
+            data = Map<String, dynamic>.from(event.value as Map);
+            var firstDrugName = data["Name"];
+
+            //Get second drug's name
+            ref = fbDb.FirebaseDatabase.instance.ref("Drugs").child(targetDrugId.toString());
+            event = await ref.get();
+            data = Map<String, dynamic>.from(event.value as Map);
+            var secondDrugName = data["Name"];
+
+            setState(() {
+              oppositeDrugs.add("⚠ $firstDrugName - $secondDrugName");
+            });
+          }
+        }
+        catch(error) {
+          print(error);
+        }
+      }
+    }
+    /*** Getting drug to drug data ***/
+
+
+
+
+    /*** Setting data ***/
     setState(() {
       userDocumentUID = snapshot.docs[0].reference.id; // We will use this document id to update profile
       userName = snapshot.docs[0].get('userName');
@@ -107,14 +168,19 @@ class ProfileState extends State<Profile> {
             break;
           }
       }
+      /*** Setting data ***/
+
+
+      /*** Close the loader and show profile ***/
       isLoading = false;
     });
     }
 
+
   @override
   void initState() {
     getLoggedInUserProfileInfo();
-    // Execute the function as initial state @Egemen
+    // Execute all functions as initial state @Egemen
   }
 
   void createUIWithHour()
@@ -404,7 +470,22 @@ class ProfileState extends State<Profile> {
                                   ]
                                 ),
                                 SizedBox(
-                                    height: size.height * .22
+                                    height: size.height * .22,
+                                    child:
+                                    SingleChildScrollView(
+                                      child:
+                                      Column(
+                                          children: [
+                                            for (var drugToDrug in oppositeDrugs)
+                                              Align(
+                                              alignment: Alignment.centerLeft,
+                                                child:
+                                                  Text(" $drugToDrug\n", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400)
+                                                )
+                                              )
+                                          ]
+                                      )
+                                    ),
                                 ),
                                 const Text(
                                     "Be careful for those listed above. It is not recommended to use them together.",
@@ -900,7 +981,7 @@ class ProfileState extends State<Profile> {
                                                         }
                                                       });
                                                     },
-                                                    items: list.map<DropdownMenuItem<String>>((String value) {
+                                                    items: genderList.map<DropdownMenuItem<String>>((String value) {
                                                       return DropdownMenuItem<String>(
                                                         value: value,
                                                         child: Text(value),
