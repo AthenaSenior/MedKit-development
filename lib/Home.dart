@@ -226,7 +226,7 @@ class HomePageState extends State<HomePage> {
                                       style: TextStyle(
                                           color: color,
                                           fontWeight: FontWeight.w300,
-                                          fontSize: 19)
+                                          fontSize: 16)
                                   ),
                                   Image.asset("assets/images/medkit_logo.png",
                                       width: size.width * 0.25, height: size.height * 0.08),
@@ -372,7 +372,7 @@ class HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .47,
+                  height: size.height * .468,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                     color: Colors.white70.withOpacity(.85),
@@ -403,7 +403,7 @@ class HomePageState extends State<HomePage> {
                             color: Colors.black
                         ),
                   SizedBox(
-                     height: size.height * .354,
+                     height: size.height * .339,
                     child:
                   SingleChildScrollView(
                     child:

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:med_kit/service/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Home.dart';
@@ -89,6 +90,10 @@ class _SplashScreenState extends State<SplashScreen>
     var intValue = Random().nextInt(8); // Value is >= 0 and < 8.
     splashScreenSentence = splashScreenSentences[intValue];
     // Executions as initial state @Egemen
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   @override

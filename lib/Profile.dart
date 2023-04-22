@@ -340,7 +340,7 @@ class ProfileState extends State<Profile> {
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           color: Colors.black,
-                                          fontSize: 25,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.w400)
                                   ),
                                   SizedBox(
@@ -351,7 +351,7 @@ class ProfileState extends State<Profile> {
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           color: Colors.black45,
-                                          fontSize: 15,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w500)
                                   ),
                                 ]
@@ -362,7 +362,7 @@ class ProfileState extends State<Profile> {
                           Row(
                             children:[
                               SizedBox(
-                                  width: size.width * .52
+                                  width: size.width * .46
                               ),
                               ElevatedButton.icon(
                                 onPressed: () => {

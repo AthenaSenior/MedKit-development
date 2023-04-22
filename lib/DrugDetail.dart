@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:med_kit/Main.dart';
 import 'package:med_kit/service/auth.dart';
 
@@ -43,6 +44,10 @@ class DrugDetailState extends State<DrugDetail> {
   @override
   Widget build(BuildContext context) {
     // Main widget
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     createUIWithHour();
     var size = MediaQuery.of(context).size;
     return Scaffold(
@@ -135,7 +140,7 @@ class DrugDetailState extends State<DrugDetail> {
           ),
         ],
         currentIndex: 0,
-        selectedItemColor: Colors.blueAccent,
+        selectedItemColor: Colors.green,
         onTap: (i) {
           setState(() {
             if (i == 1) {

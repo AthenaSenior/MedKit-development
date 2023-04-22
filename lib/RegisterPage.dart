@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:med_kit/service/auth.dart';
 import 'Home.dart';
 import 'LoginPage.dart';
@@ -27,6 +28,16 @@ class RegisterPageState extends State<RegisterPage> {
   String dropdownValue = 'Male'; // by Default
 
   IconData icon = Icons.male_rounded;
+
+  @override
+  void initState()
+  {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) { // Main widget

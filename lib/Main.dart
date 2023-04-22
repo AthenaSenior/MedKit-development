@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:med_kit/service/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'FAQ.dart';
@@ -38,6 +39,16 @@ class MainPageState extends State<MainPage> {
     prefs.setString('rememberedUserEmail', "");
     prefs.setString('rememberedUserPass', "");
     prefs.setBool('rememberMe', false);
+  }
+
+  @override
+  void initState()
+  {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   @override

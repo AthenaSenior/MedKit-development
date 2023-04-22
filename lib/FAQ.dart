@@ -55,7 +55,7 @@ class FAQ extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Container(
-                  height: size.height * .69,
+                  height: size.height * .66,
                   width: size.width * .95,
                   decoration: BoxDecoration(
                     color: Colors.white70.withOpacity(.75),
@@ -167,7 +167,7 @@ class FAQ extends StatelessWidget {
                                 width: 5
                             ),
                             const Text(
-                                "\n Where can I find my scanned medicines?",
+                                "\n Where can I find my \n scanned medicines?",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
@@ -197,7 +197,7 @@ class FAQ extends StatelessWidget {
                                 width: 5
                             ),
                             const Text(
-                                "\n Is Med-Kit can be a substitute for consulting a \nhealthcare professional?",
+                                "\n Is Med-Kit can be a substitute for \n consulting a healthcare professional?",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
