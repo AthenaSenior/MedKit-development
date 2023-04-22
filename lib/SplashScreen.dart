@@ -18,20 +18,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
 
-  bool loading = false;
-  late Animation<double> animation;
-  late AnimationController animationController;
-  int _start = 10;
+  late AnimationController _controller;
+  bool _isShowingFront = true;
+  int _start = 8;
   late Timer splashTimer;
   final AuthService _authService = AuthService();
   // Initialization of variables @Egemen
-
-  // Animation - Rotation Function @Egemen
-  void setRotation(int degrees) {
-    final angle = degrees * pi / 180;
-    animation =
-        Tween<double>(begin: 0, end: angle).animate(animationController);
-  }
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -53,11 +45,6 @@ class _SplashScreenState extends State<SplashScreen>
             });
           });
           timer.cancel();
-        } else if (_start == 6) {
-          setState(() {
-            loading = true;
-            _start--;
-          });
         } else {
           setState(() {
             _start--;
@@ -82,10 +69,10 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 3));
-    setRotation(360);
-    animationController.forward(from: 0);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat();
     startTimer();
     var intValue = Random().nextInt(8); // Value is >= 0 and < 8.
     splashScreenSentence = splashScreenSentences[intValue];
@@ -98,8 +85,14 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    animationController.dispose();
+    _controller.dispose();
     super.dispose(); // Dispose for animation @Egemen
+  }
+
+  void _toggleShowingSide() {
+    setState(() {
+      _isShowingFront = !_isShowingFront;
+    });
   }
 
   Future<bool> getRememberMeToAutoLoginOrNot() async {
@@ -137,20 +130,24 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            AnimatedBuilder(
-              animation: animation,
-              builder: (context, child) => Transform.rotate(
-                angle: animation.value,
-                child: child,
+            GestureDetector(
+              onTap: _toggleShowingSide,
+              child: RotationTransition(
+                turns: Tween(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: _controller,
+                    curve: Curves.easeInOut,
+                  ),
+                ),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: _isShowingFront
+                      ? Image.asset('assets/images/medkit_logo.png', width: 250, height: 200, key: UniqueKey())
+                      : Image.asset('assets/images/medkit_logo.png', width: 250, height: 200, key: UniqueKey()),
+                ),
               ),
-              child: Image.asset('assets/images/medkit_logo.png',
-                  width: 250, height: 200),
             ),
             const SizedBox(height: 20),
-            Visibility(
-                visible: loading,
-                child: Image.asset('assets/images/loading.gif',
-                    width: 30, height: 30)),
             const SizedBox(height: 20),
             Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -158,6 +155,10 @@ class _SplashScreenState extends State<SplashScreen>
                   Text(splashScreenSentence,
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
+                  const SizedBox(height: 20),
+                  const Text("I'm getting ready for you.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
                 ]),
           ],
         ),

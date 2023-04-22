@@ -29,7 +29,7 @@ class Loader extends StatelessWidget {
               height: 25,
             ),
             const Text("We're getting things ready..",
-                style: TextStyle(fontSize: 26, color: Colors.black, fontWeight: FontWeight.w300)
+                style: TextStyle(fontSize: 26, color: Colors.black, fontWeight: FontWeight.w400)
             ),
             const SizedBox(
               height: 25,
