@@ -31,8 +31,46 @@ class MainPageState extends State<MainPage> {
     Profile(loggedInUserKey: loggedInUserKey),
     const Scan(),
     FAQ(),
-    const LoginPage()
   ];
+
+  Future<void> _showUsersAreTheySureToExit() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit from Med-Kit'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Are you sure to exit from Med-Kit?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Exit'),
+              onPressed: () {
+                _authService.signOut();
+                resetRememberMeAfterLogOut();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                        const LoginPage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> resetRememberMeAfterLogOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -96,19 +134,15 @@ class MainPageState extends State<MainPage> {
         selectedItemColor: Colors.green,
         onTap: (i){
           setState(() {//
-            widget.pageId = i; // index
+            if(i != 4) {
+              widget.pageId = i; // index
+            }
+            else{
+              _showUsersAreTheySureToExit();
+            }
             if(widget.pageId == 2) {
               hideBar = true;
               canGoBack = true;
-            }
-            else if(widget.pageId == 4){
-              _authService.signOut();
-              resetRememberMeAfterLogOut();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                      const LoginPage()));
             }
             else{
               canGoBack = false;
