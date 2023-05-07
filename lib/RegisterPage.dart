@@ -37,8 +37,8 @@ class RegisterPageState extends State<RegisterPage> {
 
     final Map<String, String> requestBody = {
       "apikey": "7cf8a317",
-      "body": "Welcome to Med-Kit, $name! \n We are happy to get your registration. "
-          "\n You can explore the app by bottom menu and scan your medicine to see it's details. \n "
+      "body": "Welcome to Med-Kit, $name! \nWe are happy to get your registration. "
+          "\nYou can explore the app by bottom menu and scan your medicine to see it's details. \n"
           "For further questions: Do not hesitate to contact us. \n\nSincerely, \nMed-Kit Team.",
       "subject": "Welcome to Med-Kit",
       "receiver": email,
