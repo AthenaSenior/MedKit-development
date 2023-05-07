@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:med_kit/service/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -64,6 +66,18 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return true;
   }
 
+  Future<DateTime> getTurkeyTime() async {
+    final response = await http.get(Uri.parse('https://medkit-api.onrender.com/get_time'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final String dateTimeString = jsonResponse['turkey_time'];
+      return DateTime.parse(dateTimeString).toLocal();
+    } else {
+      throw Exception('Failed to get Turkey time');
+    }
+  }
+
 
   @override
   void initState() {
@@ -72,17 +86,15 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    getDate().then((date)
-    {
+    getDate().then((date) {
+      getTurkeyTime().then((value) {
+        DateTime dt = value;
+        int? res = date?.difference(dt).inDays;
 
-      DateTime dt = DateTime.now(); // BURAYI APİDEN GELECEK TARİH İLE DEĞİŞTİRELİM.
-
-      int? res = date?.difference(dt).inDays;
-
-      if(res! < 0)
-        {
+        if (res! < 0) {
           setPasswordResetRequestLimit(false);
         }
+      });
     });
   }
 
