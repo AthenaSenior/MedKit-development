@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:med_kit/service/auth.dart';
 import 'Home.dart';
 import 'LoginPage.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'Main.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -28,6 +30,28 @@ class RegisterPageState extends State<RegisterPage> {
   String dropdownValue = 'Male'; // by Default
 
   IconData icon = Icons.male_rounded;
+
+  Future<http.Response> sendEmail(String email, String name) async {
+    const String apiUrl = "https://medkit-api.onrender.com/send_email";
+    final Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
+
+    final Map<String, String> requestBody = {
+      "apikey": "7cf8a317",
+      "body": "Welcome to Med-Kit, $name! \n We are happy to get your registration. "
+          "\n You can explore the app by bottom menu and scan your medicine to see it's details. \n "
+          "For further questions: Do not hesitate to contact us. \n\nSincerely, \nMed-Kit Team.",
+      "subject": "Welcome to Med-Kit",
+      "receiver": email,
+    };
+
+    final String requestBodyJson = json.encode(requestBody);
+
+    final http.Response response = await http.post(Uri.parse(apiUrl),
+        headers: requestHeaders,
+        body: requestBodyJson);
+
+    return response;
+  }
 
   @override
   void initState()
@@ -287,6 +311,7 @@ class RegisterPageState extends State<RegisterPage> {
                                       dropdownValue,
                                       _listTileCheckBox)
                                       .then((value) {
+                                    sendEmail(_emailController.text, _nameController.text);
                                     LoginPageState.informationInvalid = false;
                                     RegisterPageState.registerInformationInvalid = false;
                                     MainPageState.loggedInUserKey = _emailController.text;
