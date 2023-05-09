@@ -22,7 +22,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
   final _textRecognizer = TextRecognizer();
   final FirebaseDatabase database = FirebaseDatabase.instance;
   DatabaseReference ref = FirebaseDatabase.instance.ref("Drugs");
-  List<String> drugs = [];
+  List<String> drugs = [], drugNames = [];
   bool isLoading = true, isScanning = false;
 
   Future<void> getAllDrugs()
@@ -33,6 +33,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
 
     for (var child in event.children) {
       drugs.add(child.child("Name").value.toString());
+      drugNames.add(child.child("ScanName").value.toString());
     }
     setState(() {
       isLoading = false;
@@ -46,6 +47,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
     _future = _requestCameraPermission();
     getAllDrugs();
   }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -274,12 +276,20 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
 
     final splittedScans = scannedText.split(' ');
 
-    print(splittedScans);
+    List<String> finalSplittedScans = [];
 
-    for(var word in splittedScans) // little bit complex nested for
+    for (String splittedScan in splittedScans) {
+      List<String> parts = splittedScan.split('\n');
+      finalSplittedScans.addAll(parts);
+    }
+
+
+    List<String> lowerCaseDrugNames = drugNames.map((word) => word.toLowerCase()).toList();
+
+    for(var word in finalSplittedScans) // little bit complex nested for
     {
       for (var item in drugs) {
-        if(item.toLowerCase().contains(word.toLowerCase()) && word.length >= 4 ){
+        if(item.toLowerCase().contains(word.toLowerCase()) && lowerCaseDrugNames.contains(word.toLowerCase())){
           scannedDrugName = item;
           break; //  Documentation: https://i.kym-cdn.com/entries/icons/mobile/000/032/031/man.jpg
         }
