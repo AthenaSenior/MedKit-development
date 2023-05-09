@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'DrugDetail.dart';
 import 'Loader.dart';
+import 'Main.dart';
 
 class Scan extends StatefulWidget {
   const Scan({super.key});
@@ -493,7 +494,11 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: AlertDialog(
           title: Text(name),
           content: Container(
             color: Colors.white, // Dialog background
@@ -525,6 +530,13 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
         ),
           actions: <Widget>[
             TextButton(
+            child: const Text('<< Back'),
+            onPressed: () {
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MainPage(pageId: 0)));
+                }
+              ),
+            TextButton(
               child: const Text('Detail >>'),
               onPressed: () {
                 Navigator.push(
@@ -535,6 +547,7 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
               },
             ),
           ],
+            ),
         );
       },
     );
@@ -546,7 +559,11 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return WillPopScope(
+            onWillPop: () async {
+          return false;
+        },
+        child: AlertDialog(
           title: const Text("Sorry!"),
           content: SingleChildScrollView(
             child: ListBody(
@@ -557,12 +574,14 @@ class _ScanState extends State<Scan> with WidgetsBindingObserver{
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Okay!'),
+              child: const Text('<< Back'),
               onPressed: () {
-                Navigator.pop(context);
-              },
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainPage(pageId: 0)));
+              }
             ),
           ],
+        ),
         );
       },
     );
