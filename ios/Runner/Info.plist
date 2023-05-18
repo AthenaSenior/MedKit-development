@@ -48,6 +48,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
+	<key>NSCameraUsageDescriptions</key>
+	<string>This app needs to access your camera for scan drugs</string>
 </dict>
 </plist>
